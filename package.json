@@ -1,0 +1,67 @@
+{
+	"name": "nitro-better-auth",
+	"type": "module",
+	"version": "0.0.0",
+	"packageManager": "pnpm@10.9.0",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/aa900031/nitro-better-auth"
+	},
+	"keywords": [
+		"nitro",
+		"better-auth",
+		"auth",
+		"nitro-module"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs"
+		}
+	},
+	"main": "./dist/index.mjs",
+	"typesVersions": {
+		"*": {
+			".": [
+				"./dist/index.d.mts"
+			]
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "unbuild",
+		"dev": "unbuild --stub && nitro dev --dir playground",
+		"release": "release-it",
+		"lint": "eslint .",
+		"test": "vitest run",
+		"test:ci": "vitest run --coverage.provider=istanbul --reporter=junit --outputFile.junit=./reports/junit.xml",
+		"test:watch": "vitest watch",
+		"test:types": "tsc --noEmit"
+	},
+	"peerDependencies": {
+		"better-auth": "^1.2.0",
+		"nitropack": "^2.11.13"
+	},
+	"dependencies": {
+		"chokidar": "^4.0.3",
+		"defu": "^6.1.4",
+		"knitwork": "^1.2.0",
+		"pathe": "^2.0.3"
+	},
+	"devDependencies": {
+		"@aa900031/eslint-config": "^3.1.0",
+		"@aa900031/release-it-config": "^0.1.0",
+		"@types/node": "latest",
+		"@vitest/coverage-istanbul": "^3.1.4",
+		"better-auth": "^1.2.8",
+		"eslint": "^9.27.0",
+		"nitropack": "^2.12.2",
+		"release-it": "^19.0.2",
+		"typescript": "~5.8.3",
+		"unbuild": "^3.5.0",
+		"vitest": "^3.1.4"
+	}
+}
