@@ -61,6 +61,16 @@ export function addTypeFile(
 	return typesPath
 }
 
+export function addTypeReference(
+	nitro: Nitro,
+	name: string,
+) {
+	nitro.options.typescript.tsConfig ??= {}
+	nitro.options.typescript.tsConfig.compilerOptions ??= {}
+	nitro.options.typescript.tsConfig.compilerOptions.types ??= []
+	nitro.options.typescript.tsConfig.compilerOptions.types.push(name)
+}
+
 export async function resolvePath(
 	nitro: Nitro,
 	path: string,

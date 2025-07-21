@@ -3,7 +3,7 @@ import defu from 'defu'
 import { defineNitroModule } from 'nitropack/kit'
 import { normalize } from 'pathe'
 import { addUserConfig } from './template/user-options'
-import { addHandler, addImports, addPlugin, createResolver } from './utils/nitro'
+import { addHandler, addImports, addPlugin, addTypeReference, createResolver } from './utils/nitro'
 
 export interface ModuleOptions {
 	singleton?: 'app' | 'request'
@@ -26,6 +26,11 @@ export default defineNitroModule({
 	async setup(nitro) {
 		const options = defu(nitro.options.betterAuth, DEFAULT_OPTIONS)
 		const resolver = createResolver(import.meta.url)
+
+		addTypeReference(
+			nitro,
+			'nitro-better-auth',
+		)
 
 		switch (options.singleton) {
 			case 'request':
@@ -72,9 +77,6 @@ export default defineNitroModule({
 
 declare module 'nitropack' {
 	interface NitroOptions {
-		betterAuth?: ModuleOptions
-	}
-	interface NitroRuntimeConfig {
 		betterAuth?: ModuleOptions
 	}
 	interface NitroConfig {
