@@ -3,6 +3,7 @@
 	"type": "module",
 	"version": "0.0.0",
 	"packageManager": "pnpm@10.9.0",
+	"author": "zhong666 <hi@zhong666.me>",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
