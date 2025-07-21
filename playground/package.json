@@ -1,0 +1,13 @@
+{
+	"name": "nitro-better-auth-playground",
+	"private": true,
+	"scripts": {
+		"dev": "nitro dev",
+		"build": "nitro build",
+		"preview": "node .output/server/index.mjs"
+	},
+	"dependencies": {
+		"nitro-better-auth": "workspace:*",
+		"nitropack": "^2.12.2"
+	}
+}
