@@ -1,6 +1,5 @@
 import defu from 'defu'
 import { defineNitroModule } from 'nitropack/kit'
-import { normalize } from 'pathe'
 import { addUserConfig } from './template/user-options'
 import { addHandler, addImports, addPlugin, addTypeReference, createResolver } from './utils/nitro'
 
@@ -72,7 +71,7 @@ export default defineNitroModule({
 		}
 		addHandler(nitro, {
 			route: options.handlerPath,
-			handler: normalize(resolver.resolve('./runtime/api/auth')),
+			handler: resolver.resolve('./runtime/api/auth'),
 		})
 		await addUserConfig(
 			nitro,

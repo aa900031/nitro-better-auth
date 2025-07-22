@@ -2,7 +2,7 @@ import type { Nitro, NitroEventHandler } from 'nitropack'
 import type { Import } from 'unimport'
 import * as process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { dirname, isAbsolute, resolve } from 'pathe'
+import { dirname, isAbsolute, normalize, resolve } from 'pathe'
 import { resolvePathType } from './fs'
 
 export function createResolver(base: string | URL) {
@@ -16,7 +16,9 @@ export function createResolver(base: string | URL) {
 }
 
 export function addPlugin(nitro: Nitro, path: string) {
-	nitro.options.plugins.push(path)
+	nitro.options.plugins.push(
+		normalize(path),
+	)
 }
 
 export function addImports(nitro: Nitro, imports: Import[]) {
@@ -39,7 +41,10 @@ export function addVirtualFile(
 }
 
 export function addHandler(nitro: Nitro, handler: NitroEventHandler) {
-	nitro.options.handlers.push(handler)
+	nitro.options.handlers.push({
+		...handler,
+		handler: normalize(handler.handler),
+	})
 }
 
 export function addTypeFile(
