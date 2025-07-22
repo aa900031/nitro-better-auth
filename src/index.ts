@@ -1,4 +1,3 @@
-import consola from 'consola'
 import defu from 'defu'
 import { defineNitroModule } from 'nitropack/kit'
 import { normalize } from 'pathe'
@@ -34,20 +33,27 @@ export default defineNitroModule({
 
 		switch (options.singleton) {
 			case 'request':
-				if (nitro.options.experimental.asyncContext !== true)
-					consola.warn('Please enable "experimental.asyncContext" first.')
-
 				addPlugin(
 					nitro,
 					resolver.resolve('./runtime/plugins/auth-request'),
 				)
-				addImports(
-					nitro,
-					[{
-						name: 'useBetterAuth',
-						from: resolver.resolve('./runtime/utils/better-auth-request'),
-					}],
-				)
+				if (nitro.options.experimental.asyncContext === true) {
+					addImports(
+						nitro,
+						[{
+							name: 'useBetterAuth',
+							from: resolver.resolve('./runtime/utils/better-auth-request'),
+						}]
+					)
+				} else {
+					addImports(
+						nitro,
+						[{
+							name: 'useBetterAuth',
+							from: resolver.resolve('./runtime/utils/better-auth-request-event'),
+						}],
+					)
+				}
 				break
 			case 'app':
 			default:
