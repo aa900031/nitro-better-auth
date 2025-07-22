@@ -4,7 +4,7 @@ import { useNitroApp } from '#imports'
 export function useBetterAuth(): BetterAuthResult {
 	const nitroApp = useNitroApp()
 	if (nitroApp._betterAuth == null)
-		throw new Error('No better-auth provide from context')
+		throw new Error('No better-auth provide from nitro app')
 
 	return nitroApp._betterAuth
 }

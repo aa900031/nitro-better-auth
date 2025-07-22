@@ -20,7 +20,10 @@
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
 		"verbatimModuleSyntax": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"types": [
+			"./shims.d.ts",
+		]
 	},
 	"include": ["src/**/*"],
 	"exclude": [

@@ -17,7 +17,7 @@ export default defineBuildConfig({
 	],
 	declaration: true,
 	externals: [
-		'consola',
+		'h3',
 	],
 	rollup: {
 		esbuild: {
