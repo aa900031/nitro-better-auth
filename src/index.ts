@@ -64,6 +64,13 @@ export default defineNitroModule({
 				)
 				break
 		}
+		addImports(
+			nitro,
+			[{
+				name: 'AuthMiddleware',
+				from: resolver.resolve('./runtime/utils/auth-middleware'),
+			}],
+		)
 		addHandler(nitro, {
 			route: options.handlerPath,
 			handler: normalize(resolver.resolve('./runtime/api/auth')),
