@@ -42,9 +42,10 @@ export default defineNitroModule({
 						[{
 							name: 'useBetterAuth',
 							from: resolver.resolve('./runtime/utils/better-auth-request'),
-						}]
+						}],
 					)
-				} else {
+				}
+				else {
 					addImports(
 						nitro,
 						[{
@@ -69,6 +70,17 @@ export default defineNitroModule({
 				)
 				break
 		}
+		addImports(
+			nitro,
+			[{
+				name: 'AuthenticateMiddleware',
+				from: resolver.resolve('./runtime/utils/auth-middleware'),
+			}, {
+				name: 'AuthenticateMiddleware',
+				as: 'AuthMiddleware',
+				from: resolver.resolve('./runtime/utils/auth-middleware'),
+			}],
+		)
 		addHandler(nitro, {
 			route: options.handlerPath,
 			handler: resolver.resolve('./runtime/api/auth'),
