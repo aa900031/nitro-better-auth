@@ -42,9 +42,10 @@ export default defineNitroModule({
 						[{
 							name: 'useBetterAuth',
 							from: resolver.resolve('./runtime/utils/better-auth-request'),
-						}]
+						}],
 					)
-				} else {
+				}
+				else {
 					addImports(
 						nitro,
 						[{
