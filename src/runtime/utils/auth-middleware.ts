@@ -1,7 +1,7 @@
 import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 import { createError, eventHandler, useBetterAuth } from '#imports'
 
-export const AuthMiddleware = eventHandler(async (event) => {
+export const AuthenticateMiddleware = eventHandler(async (event) => {
 	const auth = useBetterAuth(event)
 
 	const session = await auth.api.getSession({

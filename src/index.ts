@@ -67,7 +67,11 @@ export default defineNitroModule({
 		addImports(
 			nitro,
 			[{
-				name: 'AuthMiddleware',
+				name: 'AuthenticateMiddleware',
+				from: resolver.resolve('./runtime/utils/auth-middleware'),
+			}, {
+				name: 'AuthenticateMiddleware',
+				as: 'AuthMiddleware',
 				from: resolver.resolve('./runtime/utils/auth-middleware'),
 			}],
 		)
