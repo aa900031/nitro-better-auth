@@ -102,6 +102,25 @@ export default () => ({
 } satisfies BetterAuthOptions)
 ```
 
+## Middlewares
+
+Provide middleware for auth, you can easy use in `eventHandler`
+
+```typescript
+export default eventHandler({
+	onRequest: [
+		AuthenticateMiddleware, // a.k.a: AuthMiddleware
+	],
+	handler: async (event) => {
+		// Could get auth data form event.context
+		const { user } = event.context.auth!
+		return {
+			data: user,
+		}
+	},
+})
+```
+
 ## License
 
 Made with ❤️
