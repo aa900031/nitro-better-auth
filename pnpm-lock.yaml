@@ -41,7 +41,7 @@ importers:
         version: 9.31.0(jiti@2.4.2)
       nitropack:
         specifier: ^2.12.2
-        version: 2.12.2(@netlify/blobs@9.1.2)(rolldown@1.0.0-beta.27)
+        version: 2.12.4(@netlify/blobs@9.1.2)(rolldown@1.0.0-beta.27)
       release-it:
         specifier: ^19.0.4
         version: 19.0.4(@types/node@20.19.9)(magicast@0.3.5)
@@ -61,8 +61,8 @@ importers:
         specifier: workspace:*
         version: link:..
       nitropack:
-        specifier: ^2.12.2
-        version: 2.12.2(@netlify/blobs@9.1.2)(rolldown@1.0.0-beta.27)
+        specifier: ^2.12.3
+        version: 2.12.4(@netlify/blobs@9.1.2)(rolldown@1.0.0-beta.27)
 
 packages:
 
@@ -3716,8 +3716,8 @@ packages:
     resolution: {integrity: sha512-NHDDGYudnvRutt/VhKFlX26IotXe1w0cmkDm6JGquh5bz/bDTw0LufSmH/GxTjEdpHEO+bVKFTwdrcGa/9XlKQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  nitropack@2.12.2:
-    resolution: {integrity: sha512-DwNX6MNrNZGOZupSUxWuixyMRKhOgLZ3HRj9z0WtSKuqDnwDmYVa+zJ/1zHvj5Ix9NalSsqfiB8CBHFssLkTng==}
+  nitropack@2.12.4:
+    resolution: {integrity: sha512-MPmPRJWTeH03f/NmpN4q3iI3Woik4uaaWIoX34W3gMJiW06Vm1te/lPzuu5EXpXOK7Q2m3FymGMPXcExqih96Q==}
     engines: {node: ^16.11.0 || >=17.0.0}
     hasBin: true
     peerDependencies:
@@ -9046,7 +9046,7 @@ snapshots:
     dependencies:
       type-fest: 2.19.0
 
-  nitropack@2.12.2(@netlify/blobs@9.1.2)(rolldown@1.0.0-beta.27):
+  nitropack@2.12.4(@netlify/blobs@9.1.2)(rolldown@1.0.0-beta.27):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.0
       '@netlify/functions': 3.1.10(rollup@4.45.1)
