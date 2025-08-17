@@ -55,10 +55,10 @@
 	"devDependencies": {
 		"@aa900031/eslint-config": "^3.1.0",
 		"@aa900031/release-it-config": "^0.1.0",
-		"@types/node": "^20.19.9",
+		"@types/node": "^20.19.10",
 		"@vitest/coverage-istanbul": "^3.2.4",
 		"better-auth": "^1.3.4",
-		"eslint": "^9.32.0",
+		"eslint": "^9.33.0",
 		"nitropack": "^2.12.4",
 		"release-it": "^19.0.4",
 		"typescript": "~5.9.2",
