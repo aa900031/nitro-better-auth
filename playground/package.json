@@ -8,6 +8,6 @@
 	},
 	"dependencies": {
 		"nitro-better-auth": "workspace:*",
-		"nitropack": "^2.12.2"
+		"nitropack": "^2.12.5"
 	}
 }
