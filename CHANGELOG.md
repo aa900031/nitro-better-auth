@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 
+## v0.1.1
+
+[compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.1.0...v0.1.1)
+
+### 🩹 Fixes
+
+-  Can't resolve "#import" (#18) ([4a5d3dc](https://github.com/aa900031/nitro-better-auth/commit/4a5d3dc311c40f1cf9a9e312a2fa89994913aecb))
+-  Incorrect type of `AuthenticateMiddleware` (#20) ([7999508](https://github.com/aa900031/nitro-better-auth/commit/7999508078110fba380eea9ee492ec9fbf6ae80e))
+
+### 🏡 Chore
+
+-  **deps:** Update devdependency better-auth to ^1.3.2 (#9) ([afc7aa6](https://github.com/aa900031/nitro-better-auth/commit/afc7aa6c8715c584ff2154a48aab267808046599))
+-  **deps:** Update devdependency better-auth to ^1.3.5 (#14) ([88a6c2c](https://github.com/aa900031/nitro-better-auth/commit/88a6c2ca12074ffbd4ae5e481b7490dae2b4588f))
+-  **deps:** Update devdependency typescript to ~5.9.2 (#12) ([4a873ac](https://github.com/aa900031/nitro-better-auth/commit/4a873acc49d4b0787e86146e532df2e9d9c3b3ec))
+-  **deps:** Update npm non-major develop dependencies (#10) ([45d4cb9](https://github.com/aa900031/nitro-better-auth/commit/45d4cb9ad2e57759cf1284dacde6d85fc915adfd))
+-  **deps:** Update npm non-major develop dependencies (#13) ([44fd556](https://github.com/aa900031/nitro-better-auth/commit/44fd5569a0a37e675ceaa2c26398ed01e45f5859))
+-  **deps:** Update npm non-major develop dependencies (#15) ([ad1127e](https://github.com/aa900031/nitro-better-auth/commit/ad1127eed32c02e427f3925f1620006536891934))
+-  **deps:** Update npm non-major develop dependencies (#7) ([846b752](https://github.com/aa900031/nitro-better-auth/commit/846b752f46b9e613269bc93e498cd03f6d1cc7b6))
+-  Upgrade dev deps ([89f1ac4](https://github.com/aa900031/nitro-better-auth/commit/89f1ac447cd16c611d42fb80d0b47f85bf530871))
+-  Use autofix.ci (#19) ([d567efa](https://github.com/aa900031/nitro-better-auth/commit/d567efa4198e5e950315845ca64280db6daba0c7))
+
+
+
+#### ❤️ Contributors
+
+- Zhong666 <aa900031@gmail.com>
+- Renovate[bot]
+
 ## v0.1.0
 
 [compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.1.0-beta.0...v0.1.0)
