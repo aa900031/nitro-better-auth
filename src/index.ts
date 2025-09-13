@@ -25,6 +25,12 @@ export default defineNitroModule({
 		const options = defu(nitro.options.betterAuth, DEFAULT_OPTIONS)
 		const resolver = createResolver(import.meta.url)
 
+		nitro.options.externals ??= {} as any
+		nitro.options.externals.inline ??= []
+		nitro.options.externals.inline.push(
+			resolver.resolve('./runtime'),
+		)
+
 		addTypeReference(
 			nitro,
 			'nitro-better-auth',
