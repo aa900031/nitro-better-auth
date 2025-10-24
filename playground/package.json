@@ -7,8 +7,8 @@
 		"preview": "node .output/server/index.mjs"
 	},
 	"dependencies": {
-		"better-auth": "^1.3.9",
+		"better-auth": "^1.3.27",
 		"nitro-better-auth": "workspace:*",
-		"nitropack": "^2.12.6"
+		"nitropack": "^2.12.7"
 	}
 }
