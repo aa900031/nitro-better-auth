@@ -33,6 +33,7 @@
 		"dist"
 	],
 	"scripts": {
+		"postinstall": "unbuild --stub",
 		"build": "unbuild",
 		"dev": "unbuild --stub && nitro dev --dir playground",
 		"release": "release-it",
@@ -47,22 +48,22 @@
 		"nitropack": "^2.11.13"
 	},
 	"dependencies": {
-		"chokidar": "^4.0.3",
-		"defu": "^6.1.4",
-		"knitwork": "^1.2.0",
-		"pathe": "^2.0.3"
+		"chokidar": "catalog:deps",
+		"defu": "catalog:deps",
+		"knitwork": "catalog:deps",
+		"pathe": "catalog:deps"
 	},
 	"devDependencies": {
-		"@aa900031/eslint-config": "^3.2.0",
-		"@aa900031/release-it-config": "^0.1.0",
-		"@types/node": "^20.19.22",
-		"@vitest/coverage-istanbul": "^3.2.4",
-		"better-auth": "^1.3.27",
-		"eslint": "^9.37.0",
-		"nitropack": "^2.12.7",
-		"release-it": "^19.0.5",
-		"typescript": "~5.9.3",
-		"unbuild": "^3.6.1",
-		"vitest": "^3.2.4"
+		"@aa900031/eslint-config": "catalog:dev",
+		"@aa900031/release-it-config": "catalog:dev",
+		"@types/node": "catalog:types",
+		"@vitest/coverage-istanbul": "catalog:dev",
+		"better-auth": "catalog:peer",
+		"eslint": "catalog:dev",
+		"nitropack": "catalog:peer",
+		"release-it": "catalog:dev",
+		"typescript": "catalog:types",
+		"unbuild": "catalog:dev",
+		"vitest": "catalog:dev"
 	}
 }
