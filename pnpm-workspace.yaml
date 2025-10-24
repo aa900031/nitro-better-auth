@@ -12,7 +12,7 @@ catalogs:
     '@aa900031/eslint-config': ^3.2.0
     '@aa900031/release-it-config': ^0.1.0
     '@vitest/coverage-istanbul': ^3.2.4
-    eslint: ^9.37.0
+    eslint: ^9.38.0
     release-it: ^19.0.5
     unbuild: ^3.6.1
     vitest: ^3.2.4
