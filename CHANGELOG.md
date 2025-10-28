@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 
+## v0.2.0
+
+[compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.1.1...v0.2.0)
+
+### 🚀 Enhancements
+
+-  Get better-auth instance from event.context (#34) ([019d823](https://github.com/aa900031/nitro-better-auth/commit/019d823d88fbaf76e71313df8dc2fab3313c2cf9))
+
+### 🩹 Fixes
+
+-  Default user options (#33) ([8b3d78a](https://github.com/aa900031/nitro-better-auth/commit/8b3d78aa5d6d3e1f34f238ce76ce68b55836cfa1))
+
+### 🏡 Chore
+
+-  **deps:** Update all non-major dependencies (#32) ([60bf186](https://github.com/aa900031/nitro-better-auth/commit/60bf1861da934f92b4aa050e76b4e31e9d6b6d57))
+-  **deps:** Update devdependency @types/node to ^20.19.21 (#29) ([4399177](https://github.com/aa900031/nitro-better-auth/commit/4399177fd89abdba630e697844ad52eb1686a34b))
+-  **deps:** Update devdependency @types/node to ^20.19.22 (#30) ([db1a7b4](https://github.com/aa900031/nitro-better-auth/commit/db1a7b447ffaa81afeeef2535d231137bc002df3))
+-  **deps:** Update devdependency better-auth to ^1.3.16 (#24) ([293dace](https://github.com/aa900031/nitro-better-auth/commit/293daceff0bc13cccd9401dc530cd58e535b42cb))
+-  **deps:** Update devdependency eslint to ^9.35.0 (#17) ([05dcc0a](https://github.com/aa900031/nitro-better-auth/commit/05dcc0a483964e534478acf430552ef8093a5c9a))
+-  **deps:** Update node.js to v20.19.5 (#16) ([df8b8fc](https://github.com/aa900031/nitro-better-auth/commit/df8b8fc1db861c70ba8de52c2ad2b360c0acc005))
+-  **deps:** Update npm non-major dependencies (#22) ([19879d5](https://github.com/aa900031/nitro-better-auth/commit/19879d54a919258912c8d60c5ff6ab21c78ee1f2))
+-  **deps:** Update npm non-major develop dependencies (#23) ([9ef7f6e](https://github.com/aa900031/nitro-better-auth/commit/9ef7f6e4687d329b990d61eb0b60dba5c527f6df))
+-  **deps:** Update npm non-major develop dependencies (#25) ([e241374](https://github.com/aa900031/nitro-better-auth/commit/e2413741f88fe5fa59ec3b50084f04c8487f88ab))
+-  **deps:** Update npm non-major develop dependencies (#26) ([6536364](https://github.com/aa900031/nitro-better-auth/commit/65363647fc56c5284fe0cf41121b52ea7cbf6b2b))
+-  **deps:** Update npm non-major develop dependencies (#27) ([3636f87](https://github.com/aa900031/nitro-better-auth/commit/3636f87fbca3c10da30f70c5d4f4a214d4586a17))
+-  **deps:** Update npm non-major develop dependencies (#28) ([3ed13ff](https://github.com/aa900031/nitro-better-auth/commit/3ed13ff511fbce92c4d6c6567905d2360c8589f9))
+-  **deps:** Update pnpm to v10.15.1 (#11) ([24d284f](https://github.com/aa900031/nitro-better-auth/commit/24d284f3152b90f0bb4d68e01d1b938573017601))
+-  **deps:** Update pnpm to v10.18.3 (#21) ([e2fa7b4](https://github.com/aa900031/nitro-better-auth/commit/e2fa7b45033d20f4fa74477e5dbb199cd1e084f8))
+-  Pnpm catalogs ([f790a50](https://github.com/aa900031/nitro-better-auth/commit/f790a50193367d10922b87900c23ff9351328fda))
+-  Use npm trusted publisher ([2df366b](https://github.com/aa900031/nitro-better-auth/commit/2df366bc4bc7a1f32f8d8a9dd77321e60d652168))
+
+
+
+#### ❤️ Contributors
+
+- Renovate[bot] 
+- Zhong666 <aa900031@gmail.com>
+
 ## v0.1.1
 
 [compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.1.0...v0.1.1)
