@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 
+## v0.2.1
+
+[compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.2.0...v0.2.1)
+
+### 🏡 Chore
+
+-  Remove postinstall ([44dc661](https://github.com/aa900031/nitro-better-auth/commit/44dc661ada2303db3ff9a830a030b389158c895c))
+
+
+
+#### ❤️ Contributors
+
+- Zhong666 <aa900031@gmail.com>
+
 ## v0.2.0
 
 [compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.1.1...v0.2.0)
