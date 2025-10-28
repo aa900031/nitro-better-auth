@@ -11,7 +11,7 @@ export default defineNitroPlugin((nitroApp) => {
 			if (betterAuth == null) {
 				const opts = loadServerOptions()
 				betterAuth = createBetterAuth(
-					defu({}, opts),
+					defu(opts, {}),
 				)
 			}
 			return betterAuth
