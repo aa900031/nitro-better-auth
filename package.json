@@ -33,13 +33,12 @@
 		"dist"
 	],
 	"scripts": {
-		"postinstall": "unbuild --stub",
 		"build": "unbuild",
 		"dev": "unbuild --stub && nitro dev --dir playground",
 		"release": "release-it",
 		"lint": "eslint .",
 		"test": "vitest run",
-		"test:ci": "vitest run --coverage.provider=istanbul --reporter=junit --outputFile.junit=./reports/junit.xml",
+		"test:ci": "unbuild --stub && vitest run --coverage.provider=istanbul --reporter=junit --outputFile.junit=./reports/junit.xml",
 		"test:watch": "vitest watch",
 		"test:types": "tsc --noEmit"
 	},
