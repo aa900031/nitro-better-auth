@@ -42,7 +42,7 @@ catalogs:
       version: 3.2.4
   peer:
     better-auth:
-      specifier: ^1.3.28
+      specifier: ^1.3.29
       version: 1.3.32
     nitropack:
       specifier: ^2.12.7
