@@ -139,4 +139,3 @@ Published under the [MIT License](https://github.com/aa900031/nitro-better-auth/
 [peer-deps-better-auth-src]: https://img.shields.io/npm/dependency-version/nitro-better-auth/peer/better-auth?style=flat&colorA=18181B&colorB=F0DB4F
 [peer-deps-better-auth-href]: https://www.npmjs.com/package/better-auth
 [coderabbit-src]: https://img.shields.io/coderabbit/prs/github/aa900031/nitro-better-auth?style=flat&logo=coderabbit&logoColor=FF570A&label=CodeRabbit%20Reviews&colorA=18181B&colorB=F0DB4F
-
