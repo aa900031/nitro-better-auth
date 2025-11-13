@@ -34,12 +34,11 @@
 	],
 	"scripts": {
 		"build": "unbuild",
-		"dev": "unbuild --stub && nitro dev --dir playground",
+		"dev": "nitro dev --dir playground",
+		"dev:prepare": "unbuild --stub",
 		"release": "release-it",
 		"lint": "eslint .",
 		"test": "vitest run",
-		"test:ci": "unbuild --stub && vitest run --coverage.provider=istanbul --reporter=junit --outputFile.junit=./reports/junit.xml",
-		"test:watch": "vitest watch",
 		"test:types": "tsc --noEmit"
 	},
 	"peerDependencies": {

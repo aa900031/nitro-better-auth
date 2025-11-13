@@ -1,7 +1,0 @@
-{
-	"pnpm": {
-		"overrides": {
-			"nitro-better-auth": "./"
-		}
-	}
-}
