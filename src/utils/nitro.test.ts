@@ -8,6 +8,13 @@ describe('nitro helpers', () => {
 			const resolver = createResolver(import.meta.url)
 			const path = resolver.resolve('./runtime')
 			expect(isAbsolute(path)).toBeTruthy()
+			expect(path).toContain('runtime')
+		})
+
+		it('should handle file:// URLs', () => {
+			const resolver = createResolver('file:///path/to/base')
+			const path = resolver.resolve('./runtime')
+			expect(isAbsolute(path)).toBeTruthy()
 		})
 	})
 })
