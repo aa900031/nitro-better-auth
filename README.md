@@ -1,11 +1,11 @@
 # nitro-better-auth
 
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![coverage][coverage-src]][coverage-href]
-![coderabbit][coderabbit-src]
+[![npm version](https://img.shields.io/npm/v/nitro-better-auth?style=flat&colorA=18181B&colorB=F0DB4F)](https://npmjs.com/package/nitro-better-auth)
+[![npm downloads](https://img.shields.io/npm/dm/nitro-better-auth?style=flat&colorA=18181B&colorB=F0DB4F)](https://npmjs.com/package/nitro-better-auth)
+[![coverage](https://img.shields.io/codecov/c/gh/aa900031/nitro-better-auth?logo=codecov&style=flat&colorA=18181B&colorB=F0DB4F)](https://codecov.io/gh/aa900031/nitro-better-auth)
+![coderabbit](https://img.shields.io/coderabbit/prs/github/aa900031/nitro-better-auth?style=flat&logo=coderabbit&logoColor=FF570A&label=CodeRabbit%20Reviews&colorA=18181B&colorB=F0DB4F)
 
-[![npm peer dependency version - better-auth][peer-deps-better-auth-src]][peer-deps-better-auth-href]
+[![npm peer dependency version - better-auth](https://img.shields.io/npm/dependency-version/nitro-better-auth/peer/better-auth?style=flat&colorA=18181B&colorB=F0DB4F)](https://www.npmjs.com/package/better-auth)
 
 # Features
 
@@ -127,16 +127,3 @@ export default eventHandler({
 Made with ❤️
 
 Published under the [MIT License](https://github.com/aa900031/nitro-better-auth/blob/main/LICENSE).
-
-<!-- Link Resources -->
-
-[npm-version-src]: https://img.shields.io/npm/v/nitro-better-auth?style=flat&colorA=18181B&colorB=F0DB4F
-[npm-version-href]: https://npmjs.com/package/nitro-better-auth
-[npm-downloads-src]: https://img.shields.io/npm/dm/nitro-better-auth?style=flat&colorA=18181B&colorB=F0DB4F
-[npm-downloads-href]: https://npmjs.com/package/nitro-better-auth
-[coverage-src]: https://img.shields.io/codecov/c/gh/aa900031/nitro-better-auth?logo=codecov&style=flat&colorA=18181B&colorB=F0DB4F
-[coverage-href]: https://codecov.io/gh/aa900031/nitro-better-auth
-[peer-deps-better-auth-src]: https://img.shields.io/npm/dependency-version/nitro-better-auth/peer/better-auth?style=flat&colorA=18181B&colorB=F0DB4F
-[peer-deps-better-auth-href]: https://www.npmjs.com/package/better-auth
-[coderabbit-src]: https://img.shields.io/coderabbit/prs/github/aa900031/nitro-better-auth?style=flat&logo=coderabbit&logoColor=FF570A&label=CodeRabbit%20Reviews&colorA=18181B&colorB=F0DB4F
-
