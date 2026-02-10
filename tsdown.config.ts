@@ -5,7 +5,6 @@ import packageJson from './package.json' with { type: 'json' }
 const base = {
 	format: ['esm'],
 	shims: true,
-	clean: true,
 	dts: true,
 	external: [
 		'h3',
