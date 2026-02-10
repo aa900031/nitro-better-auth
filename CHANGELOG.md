@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 
+## v0.3.0
+
+[compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.2.1...v0.3.0)
+
+### 🩹 Fixes
+
+-  Update pnpm lock ([278e286](https://github.com/aa900031/nitro-better-auth/commit/278e286f9ec9de64410e6285f4bbe959840ac3b3))
+
+### 📖 Documentation
+
+-  Add CodeRabbit badge ([39e510e](https://github.com/aa900031/nitro-better-auth/commit/39e510e318f5e11ad8ee4ea8b25736481bd95fdd))
+
+### 🏡 Chore
+
+-  Add codeflow config ([8dfba47](https://github.com/aa900031/nitro-better-auth/commit/8dfba47c13074d0a71e53c31cceb4ffab5088146))
+-  Add test coverage (#39) ([9fcfa8c](https://github.com/aa900031/nitro-better-auth/commit/9fcfa8c4c257d8dbe1a5c4852a82af8c49f5c72c))
+-  Change eslint config type to lib ([124006b](https://github.com/aa900031/nitro-better-auth/commit/124006b52086d00b86ac2eeec29aefc4d9501da4))
+-  **ci:** Remove dev:prepare ([bb623d5](https://github.com/aa900031/nitro-better-auth/commit/bb623d5fce3d4e4afadd3278c4d7545261cb90a9))
+-  Dedupe deps ([7f71cc8](https://github.com/aa900031/nitro-better-auth/commit/7f71cc8c668ec925ffd9c34aca445b8efdb5b3b4))
+-  **deps:** Update npm non-major dependencies ([3829626](https://github.com/aa900031/nitro-better-auth/commit/3829626e97fb66d5cc04007fa20c8aa1479b0ff9))
+-  **deps:** Update npm non-major develop dependencies (#31) ([9ec8e6d](https://github.com/aa900031/nitro-better-auth/commit/9ec8e6d704d6fa1731798e2e55909c25477ee56a))
+-  Revert pnpm catalogs ([e06dd41](https://github.com/aa900031/nitro-better-auth/commit/e06dd414d51bca3130dc6e88a704696ee399aedc))
+-  Upgrade dev deps ([e3b1a30](https://github.com/aa900031/nitro-better-auth/commit/e3b1a302d0829d85cb60a588e5350600601b6241))
+-  Upgrade nodejs ([7514302](https://github.com/aa900031/nitro-better-auth/commit/751430284c16085008e687dd8a7b7b57395e1343))
+-  Upgrade pnpm and config ([ac44f65](https://github.com/aa900031/nitro-better-auth/commit/ac44f65cfc175a41261ceda9e280ab200ad469a0))
+-  Use @tsconfig/node22 ([1b97196](https://github.com/aa900031/nitro-better-auth/commit/1b9719672c8ebca974751cb172a0f8d6369dc716))
+-  Use latest eslint config ([80299f8](https://github.com/aa900031/nitro-better-auth/commit/80299f80051b521deecd3cb6603f1b50b194263c))
+-  Use tsdown to replace unbuild ([1403d8f](https://github.com/aa900031/nitro-better-auth/commit/1403d8fe80742994b052b342ef094a4958088e2f))
+-  Zero deps ([855b180](https://github.com/aa900031/nitro-better-auth/commit/855b180fe5696869219ec1c938560fbbc0889e91))
+
+
+
+#### ❤️ Contributors
+
+- Zhong666 <aa900031@gmail.com>
+- Renovate[bot]
+
 ## v0.2.1
 
 [compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.2.0...v0.2.1)
