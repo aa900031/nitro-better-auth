@@ -1,37 +1,15 @@
 {
+	"extends": "@tsconfig/node22/tsconfig.json",
 	"compilerOptions": {
-		"target": "ESNext",
-		"lib": ["ESNext"],
-		"useDefineForClassFields": true,
-		"rootDir": "./src",
-		"customConditions": [],
 		"module": "ESNext",
-		"moduleResolution": "bundler",
-		"resolveJsonModule": true,
+		"moduleResolution": "Bundler",
 		"types": [
-			"./shims.d.ts"
-		],
-		"allowImportingTsExtensions": true,
-		"allowJs": true,
-		"strict": true,
-		"noImplicitOverride": true,
-		"noImplicitThis": true,
-		"noUncheckedIndexedAccess": true,
-		"noEmit": true,
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"isolatedModules": true,
-		"verbatimModuleSyntax": true,
-		"skipLibCheck": true
+			"node"
+		]
 	},
 	"include": [
 		"build.config.ts",
 		"eslint.config.ts",
-		"src/**/*"
-	],
-	"exclude": [
-		"node_modules",
-		"dist"
+		"src/**/*.ts"
 	]
 }
