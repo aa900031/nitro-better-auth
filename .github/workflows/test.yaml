@@ -27,9 +27,6 @@ jobs:
         with:
           no-turbo-cache: 'true'
 
-      - name: Run Prepare
-        run: pnpm run dev:prepare
-
       - name: Run Test
         run: pnpm run test --coverage --reporter=junit
 
