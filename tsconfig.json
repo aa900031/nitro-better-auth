@@ -25,7 +25,11 @@
 		"verbatimModuleSyntax": true,
 		"skipLibCheck": true
 	},
-	"include": ["src/**/*"],
+	"include": [
+		"build.config.ts",
+		"eslint.config.ts",
+		"src/**/*"
+	],
 	"exclude": [
 		"node_modules",
 		"dist"
