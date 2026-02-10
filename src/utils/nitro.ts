@@ -5,7 +5,9 @@ import { fileURLToPath } from 'node:url'
 import { dirname, isAbsolute, normalize, resolve } from 'pathe'
 import { resolvePathType } from './fs'
 
-export function createResolver(base: string | URL) {
+export function createResolver(
+	base: string | URL,
+): { resolve: (...path: string[]) => string } {
 	base = base.toString()
 	if (base.startsWith('file://')) {
 		base = dirname(fileURLToPath(base))
@@ -15,13 +17,19 @@ export function createResolver(base: string | URL) {
 	}
 }
 
-export function addPlugin(nitro: Nitro, path: string) {
+export function addPlugin(
+	nitro: Nitro,
+	path: string,
+): void {
 	nitro.options.plugins.push(
 		normalize(path),
 	)
 }
 
-export function addImports(nitro: Nitro, imports: Import[]) {
+export function addImports(
+	nitro: Nitro,
+	imports: Import[],
+): void {
 	if (nitro.options.imports !== false) {
 		nitro.options.imports.imports ||= []
 		nitro.options.imports.imports.push(
@@ -36,11 +44,14 @@ export function addVirtualFile(
 		alias: string
 		getContent: () => string | Promise<string>
 	},
-) {
+): void {
 	nitro.options.virtual[params.alias] = params.getContent
 }
 
-export function addHandler(nitro: Nitro, handler: NitroEventHandler) {
+export function addHandler(
+	nitro: Nitro,
+	handler: NitroEventHandler,
+): void {
 	nitro.options.handlers.push({
 		...handler,
 		handler: normalize(handler.handler),
@@ -53,7 +64,7 @@ export function addTypeFile(
 		alias: string
 		dist: string
 	},
-) {
+): string {
 	const typesPath = resolve(nitro.options.buildDir, 'types', params.dist)
 
 	nitro.options.typescript.tsConfig ??= {}
@@ -69,7 +80,7 @@ export function addTypeFile(
 export function addTypeReference(
 	nitro: Nitro,
 	name: string,
-) {
+): void {
 	nitro.options.typescript.tsConfig ??= {}
 	nitro.options.typescript.tsConfig.compilerOptions ??= {}
 	nitro.options.typescript.tsConfig.compilerOptions.types ??= []

@@ -8,7 +8,7 @@ import { addTypeFile, addVirtualFile, resolvePath } from '../utils/nitro'
 export async function addUserConfig(
 	nitro: Nitro,
 	src: string,
-) {
+): Promise<void> {
 	addVirtualFile(nitro, {
 		alias: '#nitro-better-auth/server-options.mjs',
 		getContent: async () => {
@@ -40,7 +40,7 @@ export async function addUserConfig(
 
 async function genContent(
 	filepath: string | undefined,
-) {
+): Promise<string> {
 	if (filepath == null) {
 		return /* javascript */`
 export default () => {}
@@ -88,7 +88,7 @@ async function writeFile(
 		getContent: () => string | Promise<string>
 		dependences?: string[]
 	},
-) {
+): Promise<void> {
 	const watcher = watchDir([
 		...params.dependences ?? [],
 	].map(path => dirname(path)), {
@@ -106,13 +106,13 @@ async function writeFile(
 
 	await _write()
 
-	async function _write() {
+	async function _write(): Promise<void> {
 		const content = await params.getContent()
 		await fsp.mkdir(dirname(params.dist), { recursive: true })
 		await fsp.writeFile(params.dist, content, 'utf-8')
 	}
 
-	async function _handleWatcherChanged() {
+	async function _handleWatcherChanged(): Promise<void> {
 		_write()
 	}
 }

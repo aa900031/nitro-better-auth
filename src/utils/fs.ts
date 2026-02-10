@@ -1,6 +1,11 @@
 import * as fsp from 'node:fs/promises'
 
-export async function resolvePathType(path: string) {
+export async function resolvePathType(
+	path: string,
+): Promise<{
+	path: string
+	type: string
+} | undefined> {
 	const fd = await fsp.open(path, 'r').catch(() => null)
 	try {
 		const stats = await fd?.stat()
