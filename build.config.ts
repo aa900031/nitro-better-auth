@@ -1,4 +1,5 @@
 import { defineBuildConfig } from 'unbuild'
+import packageJson from './package.json' with { type: 'json' }
 
 export default defineBuildConfig({
 	entries: [
@@ -18,6 +19,7 @@ export default defineBuildConfig({
 	declaration: true,
 	externals: [
 		'h3',
+		...Object.keys(packageJson.peerDependencies || {}),
 	],
 	rollup: {
 		esbuild: {
