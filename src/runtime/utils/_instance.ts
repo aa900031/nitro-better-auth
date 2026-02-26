@@ -8,11 +8,12 @@ export function createBetterAuth(): Auth<any> {
 	const runtimeConfig = useRuntimeConfig()
 	const userOptions = loadServerOptions()
 	const masureOptions = {
-		baseURL: runtimeConfig.betterAuth?.url
-			?? runtimeConfig.public.betterAuth?.url // NUXT_PUBLIC_BETTER_AUTH_URL
-			?? runtimeConfig.betterAuth?.baseUrl
-			?? runtimeConfig.public.betterAuth?.baseUrl
-			?? runtimeConfig.public.auth?.url, // NUXT_PUBLIC_AUTH_URL
+		baseURL: runtimeConfig.betterAuth?.url // NITRO_BETTER_AUTH_URL
+			?? runtimeConfig.public?.betterAuth?.url // NITRO_PUBLIC_BETTER_AUTH_URL
+			?? runtimeConfig.betterAuth?.baseUrl // NITRO_BETTER_AUTH_BASE_URL
+			?? runtimeConfig.public?.betterAuth?.baseUrl // NITRO_PUBLIC_BETTER_AUTH_BASE_URL
+			?? runtimeConfig.auth?.url // NITRO_AUTH_URL
+			?? runtimeConfig.public?.auth?.url, // NITRO_PUBLIC_AUTH_URL
 	} satisfies BetterAuthOptions
 
 	return betterAuth(
