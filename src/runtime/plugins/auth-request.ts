@@ -11,7 +11,7 @@ export default defineNitroPlugin((nitroApp) => {
 				const instance = instances.get(event)
 				if (instance)
 					return instance
-				const betterAuth = createBetterAuth()
+				const betterAuth = createBetterAuth(event)
 				instances.set(event, betterAuth)
 
 				return betterAuth

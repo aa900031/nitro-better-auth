@@ -1,11 +1,14 @@
 import type { Auth, BetterAuthOptions } from 'better-auth'
+import type { H3Event } from 'h3'
 import { useRuntimeConfig } from '#imports'
 import loadServerOptions from '#nitro-better-auth/server-options.mjs'
 import { betterAuth } from 'better-auth'
 import { defu } from 'defu'
 
-export function createBetterAuth(): Auth<any> {
-	const runtimeConfig = useRuntimeConfig()
+export function createBetterAuth(
+	event?: H3Event,
+): Auth<any> {
+	const runtimeConfig = useRuntimeConfig(event)
 	const userOptions = loadServerOptions()
 	const masureOptions = {
 		baseURL: runtimeConfig.betterAuth?.url // NITRO_BETTER_AUTH_URL
