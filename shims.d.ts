@@ -15,6 +15,7 @@ declare module '#imports' {
 	import type { H3Event } from 'h3'
 
 	export { createError, eventHandler, toWebRequest } from 'h3'
+	export { useRuntimeConfig } from 'nitropack/runtime/config'
 	export { useNitroApp } from 'nitropack/runtime/internal/app'
 	export { useEvent } from 'nitropack/runtime/internal/context'
 	export { defineNitroPlugin } from 'nitropack/runtime/internal/plugin'
