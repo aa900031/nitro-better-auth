@@ -92,7 +92,7 @@ async function writeFile(
 	const watcher = watchDir([
 		...params.dependences ?? [],
 	].map(path => dirname(path)), {
-		persistent: true,
+		persistent: nitro.options.dev,
 		ignored: nitro.options.ignore,
 		ignoreInitial: true,
 	})
