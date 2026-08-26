@@ -6,10 +6,12 @@ const base = {
 	format: ['esm'],
 	shims: true,
 	dts: true,
-	external: [
-		'h3',
-		...Object.keys(packageJson.peerDependencies || {}),
-	],
+	deps: {
+		neverBundle: [
+			'h3',
+			...Object.keys(packageJson.peerDependencies || {}),
+		],
+	},
 	ignoreWatch: [
 		new URL('./playground', import.meta.url).pathname,
 	],
@@ -33,11 +35,13 @@ export default defineConfig([
 			],
 		},
 		unbundle: true,
-		external: [
-			...base.external,
-			'#imports',
-			'#nitro-better-auth/server-options.mjs',
-		],
+		deps: {
+			neverBundle: [
+				...base.deps.neverBundle,
+				'#imports',
+				'#nitro-better-auth/server-options.mjs',
+			],
+		},
 		outExtensions: () => ({
 			js: '.js',
 			dts: '.d.ts',
