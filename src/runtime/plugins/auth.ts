@@ -1,8 +1,8 @@
 import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
-import { defineNitroPlugin } from '#imports'
-import loadServerOptions from '#nitro-better-auth/server-options.mjs'
 import { betterAuth as createBetterAuth } from 'better-auth'
 import { defu } from 'defu'
+import { defineNitroPlugin } from '#imports'
+import loadServerOptions from '#nitro-better-auth/server-options.mjs'
 
 export default defineNitroPlugin((nitroApp) => {
 	Object.defineProperty(nitroApp, '_betterAuth', {

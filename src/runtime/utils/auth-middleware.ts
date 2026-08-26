@@ -1,5 +1,5 @@
-import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 import type { H3Event } from 'h3'
+import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 import { createError, useBetterAuth } from '#imports'
 
 export async function AuthenticateMiddleware(

@@ -1,9 +1,9 @@
-import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 import type { H3Event } from 'h3'
-import { defineNitroPlugin } from '#imports'
-import loadServerOptions from '#nitro-better-auth/server-options.mjs'
+import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 import { betterAuth as createBetterAuth } from 'better-auth'
 import { defu } from 'defu'
+import { defineNitroPlugin } from '#imports'
+import loadServerOptions from '#nitro-better-auth/server-options.mjs'
 
 export default defineNitroPlugin((nitroApp) => {
 	const instances = new WeakMap<H3Event, BetterAuthResult>()

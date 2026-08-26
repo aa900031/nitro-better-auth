@@ -11,8 +11,8 @@ declare module '#nitro-better-auth/types/server-options' {
 }
 
 declare module '#imports' {
-	import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 	import type { H3Event } from 'h3'
+	import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 
 	export { createError, eventHandler, toWebRequest } from 'h3'
 	export { useNitroApp } from 'nitropack/runtime/internal/app'

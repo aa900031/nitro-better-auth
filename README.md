@@ -7,7 +7,7 @@
 
 [![npm peer dependency version - better-auth](https://img.shields.io/npm/dependency-version/nitro-better-auth/peer/better-auth?style=flat&colorA=18181B&colorB=F0DB4F)](https://www.npmjs.com/package/better-auth)
 
-# Features
+## Features
 
 - Flexable use better-auth
 - Type safe
