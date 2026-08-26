@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 
+## v0.3.1
+
+[compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.3.0...v0.3.1)
+
+### 🩹 Fixes
+
+-  Watch dir with persistent not respect nitro.dev ([4d9fbe8](https://github.com/aa900031/nitro-better-auth/commit/4d9fbe847e550470a14dcc869d150e4b08bb2475))
+
+### 🏡 Chore
+
+-  **deps:** Update dev deps ([4b2a091](https://github.com/aa900031/nitro-better-auth/commit/4b2a0912ca65265de3de396a12929531b8f8341c))
+-  **deps:** Update pnpm to v11 ([3939d36](https://github.com/aa900031/nitro-better-auth/commit/3939d36f277ab0eb6000a85e029722d1e3cf46b8))
+-  Format from eslint ([acadc28](https://github.com/aa900031/nitro-better-auth/commit/acadc28e30c1c73a04aa59d9aa5a371b7b8328aa))
+
+
+
+#### ❤️ Contributors
+
+- Zhong666 <aa900031@gmail.com>
+
 ## v0.3.0
 
 [compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.2.1...v0.3.0)
