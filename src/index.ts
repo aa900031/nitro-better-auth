@@ -1,7 +1,10 @@
 import defu from 'defu'
 import { defineNitroModule } from 'nitropack/kit'
+import { resolveHandlerBasePath } from './runtime/utils/base-url'
 import { addUserConfig } from './template/user-options'
 import { addHandler, addImports, addPlugin, addTypeReference, createResolver } from './utils/nitro'
+
+export { resolveAuthBaseURL, resolveHandlerBasePath } from './runtime/utils/base-url'
 
 export interface ModuleOptions {
 	singleton?: 'app' | 'request'
@@ -24,6 +27,12 @@ export default defineNitroModule({
 	async setup(nitro) {
 		const options = defu(nitro.options.betterAuth, DEFAULT_OPTIONS)
 		const resolver = createResolver(import.meta.url)
+		const handlerBasePath = resolveHandlerBasePath(options.handlerPath)
+
+		nitro.options.runtimeConfig.nitroBetterAuth = {
+			nitroBasePath: nitro.options.baseURL || '/',
+			handlerBasePath: handlerBasePath || '',
+		}
 
 		nitro.options.externals ??= {} as any
 		nitro.options.externals.inline ??= []

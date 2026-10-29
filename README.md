@@ -35,6 +35,18 @@ export default defineNitroConfig({
 })
 ```
 
+## Server Base URL
+
+In development, the module automatically uses the request origin and falls back to `http://localhost:3000`, so no URL configuration is required.
+
+Production requires a canonical URL. Set the public site origin with `NUXT_PUBLIC_SITE_URL`, or set Better Auth's complete endpoint URL with `BETTER_AUTH_URL`:
+
+```env
+NUXT_PUBLIC_SITE_URL=https://example.com
+```
+
+An explicit `baseURL` in server options always takes priority. Production never derives the canonical URL from `Host` or forwarded headers. Nitro's configured base path and a custom static `handlerPath` are included in automatically resolved endpoint URLs.
+
 > [!TIP]
 > When you are using Postgresql as database with Hyperdrive in Cloudflare Worker, you should setup server singleton by request.
 
