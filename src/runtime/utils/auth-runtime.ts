@@ -1,0 +1,86 @@
+import type { H3Event } from 'h3'
+import { getRequestHost, getRequestProtocol } from 'h3'
+import { resolveBetterAuthOptions } from './base-url'
+import { resolveRuntimeOrigin } from './runtime-origin'
+
+export interface BetterAuthRuntimeConfig {
+	nitroBetterAuth: {
+		nitroBasePath: string
+		handlerBasePath: string
+		autoBaseURL: boolean
+	}
+	public?: {
+		siteUrl?: unknown
+	}
+}
+
+export function resolveRuntimeBetterAuthOptions<T extends object>(
+	options: T,
+	params: {
+		dev: boolean
+		env: Record<string, string | undefined>
+		event?: H3Event
+		runtimeConfig: BetterAuthRuntimeConfig
+		onInferred?: (baseURL: string, source: string) => void
+		warn?: (message: string) => void
+	},
+): { options: T, cacheKey?: string } {
+	let cacheKey: string | undefined
+	const moduleConfig = params.runtimeConfig.nitroBetterAuth
+	const resolvedOptions = resolveBetterAuthOptions(options, {
+		dev: params.dev,
+		nitroBasePath: moduleConfig.nitroBasePath,
+		handlerBasePath: moduleConfig.handlerBasePath,
+		autoBaseURL: moduleConfig.autoBaseURL,
+		siteURL: params.runtimeConfig.public?.siteUrl || params.env.NUXT_PUBLIC_SITE_URL,
+		betterAuthURL: params.env.BETTER_AUTH_URL,
+		requestOrigin: params.dev ? getEventOrigin(params.event) : undefined,
+		getEnvironmentOrigin: () => resolveRuntimeOrigin({
+			dev: params.dev,
+			env: params.env,
+		}),
+		onInferred: (baseURL, source) => {
+			params.onInferred?.(baseURL, source)
+			if (source === 'request origin')
+				cacheKey = baseURL
+		},
+		warn: params.warn,
+	})
+
+	return { options: resolvedOptions, cacheKey }
+}
+
+export function createAppInstanceCache<T>(): {
+	get: (key: string | undefined, create: () => T) => T
+} {
+	const instances = new Map<string | undefined, T>()
+	return {
+		get(key, create) {
+			if (!instances.has(key))
+				instances.set(key, create())
+			return instances.get(key)!
+		},
+	}
+}
+
+export function createRequestInstanceCache<K extends object, T>(): {
+	get: (key: K, create: () => T) => T
+} {
+	const instances = new WeakMap<K, T>()
+	return {
+		get(key, create) {
+			if (!instances.has(key))
+				instances.set(key, create())
+			return instances.get(key)!
+		},
+	}
+}
+
+function getEventOrigin(event?: H3Event): string | undefined {
+	if (!event)
+		return undefined
+
+	const host = getRequestHost(event, { xForwardedHost: true })
+	const protocol = getRequestProtocol(event, { xForwardedProto: true })
+	return host ? `${protocol}://${host}` : undefined
+}

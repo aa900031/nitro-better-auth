@@ -121,6 +121,17 @@ describe('base URL resolution', () => {
 			])
 		})
 
+		it('reports request origins as the selected inferred source', () => {
+			const inferred: string[] = []
+			resolveServerBaseURL({
+				...defaultContext,
+				dev: true,
+				requestOrigin: 'http://localhost:4567',
+				onInferred: (baseURL, source) => inferred.push(`${source}: ${baseURL}`),
+			})
+			expect(inferred).toEqual(['request origin: http://localhost:4567'])
+		})
+
 		it('does not report configured URLs as inferred', () => {
 			const inferred: string[] = []
 			resolveServerBaseURL({

@@ -1,26 +1,16 @@
 import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 import type { H3Event } from 'h3'
+import type { BetterAuthRuntimeConfig } from '../utils/auth-runtime'
 import process from 'node:process'
 import { defineNitroPlugin, useRuntimeConfig } from '#imports'
 import loadServerOptions from '#nitro-better-auth/server-options.mjs'
 import { betterAuth as createBetterAuth } from 'better-auth'
-import { getRequestHost, getRequestProtocol } from 'h3'
-import { resolveBetterAuthOptions } from '../utils/base-url'
-import { createInferredBaseURLWarning, resolveRuntimeOrigin } from '../utils/runtime-origin'
-
-interface RuntimeConfig {
-	nitroBetterAuth: {
-		nitroBasePath: string
-		handlerBasePath: string
-		autoBaseURL: boolean
-	}
-	public?: {
-		siteUrl?: unknown
-	}
-}
+import { createAppInstanceCache, resolveRuntimeBetterAuthOptions } from '../utils/auth-runtime'
+import { createInferredBaseURLWarning } from '../utils/runtime-origin'
 
 export default defineNitroPlugin((nitroApp) => {
 	const warnInferred = createInferredBaseURLWarning(message => console.warn(message))
+	const instances = createAppInstanceCache<BetterAuthResult>()
 	Object.defineProperty(nitroApp, '_betterAuth', {
 		get: () => getter(),
 	})
@@ -30,42 +20,29 @@ export default defineNitroPlugin((nitroApp) => {
 		})
 	})
 
-	// shortcut: development app singleton keeps its first inferred origin, replace with per-origin caching in ticket 04.
-	let betterAuth: BetterAuthResult | undefined
+	let optionsLoaded = false
+	let loadedOptions: ReturnType<typeof loadServerOptions> | undefined
 	function getter(event?: H3Event): BetterAuthResult {
-		if (betterAuth == null) {
-			const opts = loadServerOptions() || {}
-			const runtimeConfig = useRuntimeConfig(event) as unknown as RuntimeConfig
-			const moduleConfig = runtimeConfig.nitroBetterAuth
-			const resolvedOptions = resolveBetterAuthOptions(opts, {
-				dev: import.meta.dev === true,
-				nitroBasePath: moduleConfig.nitroBasePath,
-				handlerBasePath: moduleConfig.handlerBasePath,
-				autoBaseURL: moduleConfig.autoBaseURL,
-				siteURL: runtimeConfig.public?.siteUrl || process.env.NUXT_PUBLIC_SITE_URL,
-				betterAuthURL: process.env.BETTER_AUTH_URL,
-				requestOrigin: import.meta.dev === true ? getEventOrigin(event) : undefined,
-				getEnvironmentOrigin: () => resolveRuntimeOrigin({
-					dev: import.meta.dev === true,
-					env: process.env,
-				}),
-				onInferred: warnInferred,
-				warn: warning => console.warn(warning),
-			})
-			betterAuth = createBetterAuth(resolvedOptions)
+		if (!optionsLoaded) {
+			loadedOptions = loadServerOptions()
+			optionsLoaded = true
 		}
-		return betterAuth
+		const opts = loadedOptions || {}
+		const runtimeConfig = useRuntimeConfig(event) as unknown as BetterAuthRuntimeConfig
+		const resolved = resolveRuntimeBetterAuthOptions(opts, {
+			dev: import.meta.dev === true,
+			env: process.env,
+			event,
+			runtimeConfig,
+			onInferred: warnInferred,
+			warn: warning => console.warn(warning),
+		})
+		return instances.get(
+			resolved.cacheKey,
+			() => createBetterAuth(resolved.options),
+		)
 	}
 })
-
-function getEventOrigin(event?: H3Event): string | undefined {
-	if (!event)
-		return undefined
-
-	const host = getRequestHost(event, { xForwardedHost: true })
-	const protocol = getRequestProtocol(event, { xForwardedProto: true })
-	return host ? `${protocol}://${host}` : undefined
-}
 
 declare module 'nitropack' {
 	interface NitroApp {

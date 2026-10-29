@@ -98,10 +98,12 @@ export default eventHandler(async () => {
 })
 ```
 
-If use singleton for request, please put `event` to `useBetterAuth`, or used `asyncContext` first then you don't need that anymore.
+With the default app singleton, `useBetterAuth(event)` selects the instance for that development request origin. Calling `useBetterAuth()` without an event uses the stable configured/environment instance, or the development fallback when no stable URL exists.
+
+If using the request singleton, pass `event` to `useBetterAuth`, or enable `asyncContext` so it can use the current event automatically.
 
 ```typescript
-export default eventHandler(async () => {
+export default eventHandler(async (event) => {
 	const betterAuth = useBetterAuth(event)
 
 	// Do something with betterAuth
