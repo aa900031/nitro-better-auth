@@ -85,6 +85,53 @@ describe('base URL resolution', () => {
 			})).toBe('http://localhost:4567')
 		})
 
+		it('normalizes a loopback request origin in development', () => {
+			expect(resolveServerBaseURL({
+				...defaultContext,
+				dev: true,
+				requestOrigin: 'http://127.0.0.1:4567',
+			})).toBe('http://localhost:4567')
+		})
+
+		it('uses a runtime environment origin after the development request origin', () => {
+			expect(resolveServerBaseURL({
+				...defaultContext,
+				dev: true,
+				environmentOrigin: {
+					origin: 'https://platform.example.com',
+					source: 'VERCEL_URL',
+				},
+			})).toBe('https://platform.example.com')
+		})
+
+		it('reports the selected inferred source with the resolved endpoint URL', () => {
+			const inferred: string[] = []
+			expect(resolveServerBaseURL({
+				...defaultContext,
+				dev: true,
+				nitroBasePath: '/dashboard/',
+				environmentOrigin: {
+					origin: 'http://localhost:4567',
+					source: 'Nitro development environment',
+				},
+				onInferred: (baseURL, source) => inferred.push(`${source}: ${baseURL}`),
+			})).toBe('http://localhost:4567/dashboard/api/auth')
+			expect(inferred).toEqual([
+				'Nitro development environment: http://localhost:4567/dashboard/api/auth',
+			])
+		})
+
+		it('does not report configured URLs as inferred', () => {
+			const inferred: string[] = []
+			resolveServerBaseURL({
+				...defaultContext,
+				dev: true,
+				siteURL: 'https://site.example.com',
+				onInferred: (baseURL, source) => inferred.push(`${source}: ${baseURL}`),
+			})
+			expect(inferred).toEqual([])
+		})
+
 		it('uses localhost only as a development fallback', () => {
 			expect(resolveServerBaseURL({
 				...defaultContext,

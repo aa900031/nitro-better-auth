@@ -6,6 +6,7 @@ import loadServerOptions from '#nitro-better-auth/server-options.mjs'
 import { betterAuth as createBetterAuth } from 'better-auth'
 import { getRequestHost, getRequestProtocol } from 'h3'
 import { resolveBetterAuthOptions } from '../utils/base-url'
+import { createInferredBaseURLWarning, resolveRuntimeOrigin } from '../utils/runtime-origin'
 
 interface RuntimeConfig {
 	nitroBetterAuth: {
@@ -19,6 +20,7 @@ interface RuntimeConfig {
 }
 
 export default defineNitroPlugin((nitroApp) => {
+	const warnInferred = createInferredBaseURLWarning(message => console.warn(message))
 	Object.defineProperty(nitroApp, '_betterAuth', {
 		get: () => getter(),
 	})
@@ -43,6 +45,11 @@ export default defineNitroPlugin((nitroApp) => {
 				siteURL: runtimeConfig.public?.siteUrl || process.env.NUXT_PUBLIC_SITE_URL,
 				betterAuthURL: process.env.BETTER_AUTH_URL,
 				requestOrigin: import.meta.dev === true ? getEventOrigin(event) : undefined,
+				getEnvironmentOrigin: () => resolveRuntimeOrigin({
+					dev: import.meta.dev === true,
+					env: process.env,
+				}),
+				onInferred: warnInferred,
 				warn: warning => console.warn(warning),
 			})
 			betterAuth = createBetterAuth(resolvedOptions)

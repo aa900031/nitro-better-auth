@@ -6,11 +6,24 @@ export interface ServerBaseURLContext {
 	siteURL?: unknown
 	betterAuthURL?: string
 	requestOrigin?: string
+	environmentOrigin?: {
+		origin: string
+		source: string
+	}
+	getEnvironmentOrigin?: () => { origin: string, source: string } | undefined
+	onInferred?: (baseURL: string, source: string) => void
 	warn?: (message: string) => void
 }
 
 export function validateSiteURL(value: string): string {
 	return validateHTTPURL(value, 'Invalid siteUrl. Must be a valid HTTP(S) URL without credentials.').origin
+}
+
+export function normalizeLoopbackOrigin(origin: string): string {
+	const url = new URL(origin)
+	if (url.hostname === '127.0.0.1' || url.hostname === '[::1]' || url.hostname === '::1')
+		url.hostname = 'localhost'
+	return url.origin
 }
 
 export function resolveHandlerBasePath(handlerPath: string): string | undefined {
@@ -57,23 +70,39 @@ export function resolveServerBaseURL(context: ServerBaseURLContext): string {
 
 	if (context.dev && context.requestOrigin) {
 		try {
-			return resolveAuthBaseURL(
-				validateSiteURL(context.requestOrigin),
+			const baseURL = resolveAuthBaseURL(
+				normalizeLoopbackOrigin(validateSiteURL(context.requestOrigin)),
 				context.nitroBasePath,
 				requireHandlerBasePath(context.handlerBasePath),
 			)
+			context.onInferred?.(baseURL, 'request origin')
+			return baseURL
 		}
 		catch {
 			// Request headers are untrusted; an invalid inferred origin falls through.
 		}
 	}
 
+	const environmentOrigin = context.environmentOrigin || context.getEnvironmentOrigin?.()
+	if (environmentOrigin) {
+		const baseURL = resolveAuthBaseURL(
+			validateSiteURL(environmentOrigin.origin),
+			context.nitroBasePath,
+			requireHandlerBasePath(context.handlerBasePath),
+		)
+		if (context.dev)
+			context.onInferred?.(baseURL, environmentOrigin.source)
+		return baseURL
+	}
+
 	if (context.dev) {
-		return resolveAuthBaseURL(
+		const baseURL = resolveAuthBaseURL(
 			'http://localhost:3000',
 			context.nitroBasePath,
 			requireHandlerBasePath(context.handlerBasePath),
 		)
+		context.onInferred?.(baseURL, 'development fallback')
+		return baseURL
 	}
 
 	throw new Error(
