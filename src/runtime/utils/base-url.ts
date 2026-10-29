@@ -70,11 +70,7 @@ export function resolveServerBaseURL(context: ServerBaseURLContext): string {
 
 	if (context.dev && context.requestOrigin) {
 		try {
-			const baseURL = resolveAuthBaseURL(
-				normalizeLoopbackOrigin(validateSiteURL(context.requestOrigin)),
-				context.nitroBasePath,
-				requireHandlerBasePath(context.handlerBasePath),
-			)
+			const baseURL = resolveEndpointFromOrigin(context, context.requestOrigin, true)
 			context.onInferred?.(baseURL, 'request origin')
 			return baseURL
 		}
@@ -85,22 +81,14 @@ export function resolveServerBaseURL(context: ServerBaseURLContext): string {
 
 	const environmentOrigin = context.environmentOrigin || context.getEnvironmentOrigin?.()
 	if (environmentOrigin) {
-		const baseURL = resolveAuthBaseURL(
-			validateSiteURL(environmentOrigin.origin),
-			context.nitroBasePath,
-			requireHandlerBasePath(context.handlerBasePath),
-		)
+		const baseURL = resolveEndpointFromOrigin(context, environmentOrigin.origin)
 		if (context.dev)
 			context.onInferred?.(baseURL, environmentOrigin.source)
 		return baseURL
 	}
 
 	if (context.dev) {
-		const baseURL = resolveAuthBaseURL(
-			'http://localhost:3000',
-			context.nitroBasePath,
-			requireHandlerBasePath(context.handlerBasePath),
-		)
+		const baseURL = resolveEndpointFromOrigin(context, 'http://localhost:3000')
 		context.onInferred?.(baseURL, 'development fallback')
 		return baseURL
 	}
@@ -112,62 +100,17 @@ export function resolveServerBaseURL(context: ServerBaseURLContext): string {
 	)
 }
 
-export function resolveBetterAuthOptions<T extends object>(
-	options: T,
+function resolveEndpointFromOrigin(
 	context: ServerBaseURLContext,
-): T {
-	if (context.autoBaseURL === false)
-		return options
-
-	const configured = options as {
-		baseURL?: unknown
-		basePath?: unknown
-	}
-	const mountedAuthPath = context.handlerBasePath
-		? joinPath(context.nitroBasePath, context.handlerBasePath)
-		: undefined
-
-	if (
-		context.dev
-		&& typeof configured.basePath === 'string'
-		&& mountedAuthPath
-		&& normalizePath(configured.basePath) !== mountedAuthPath
-	) {
-		context.warn?.(
-			`[nitro-better-auth] Better Auth basePath "${configured.basePath}" does not match the mounted auth path "${mountedAuthPath}".`,
-		)
-	}
-
-	if (configured.baseURL != null) {
-		if (
-			typeof configured.baseURL !== 'string'
-			|| configured.basePath != null
-			|| !mountedAuthPath
-			|| mountedAuthPath === '/api/auth'
-			|| hasPathname(configured.baseURL)
-		) {
-			return options
-		}
-
-		return {
-			...options,
-			basePath: mountedAuthPath,
-		}
-	}
-
-	return {
-		...options,
-		baseURL: resolveServerBaseURL(context),
-	}
-}
-
-function hasPathname(value: string): boolean {
-	try {
-		return new URL(value).pathname !== '/'
-	}
-	catch {
-		return true
-	}
+	origin: string,
+	normalizeLoopback = false,
+): string {
+	const validatedOrigin = validateSiteURL(origin)
+	return resolveAuthBaseURL(
+		normalizeLoopback ? normalizeLoopbackOrigin(validatedOrigin) : validatedOrigin,
+		context.nitroBasePath,
+		requireHandlerBasePath(context.handlerBasePath),
+	)
 }
 
 function normalizeEndpointURL(value: string): string {
@@ -211,10 +154,10 @@ function validateHTTPURL(value: string, message: string): URL {
 	}
 }
 
-function joinPath(...paths: string[]): string {
+export function joinPath(...paths: string[]): string {
 	return `/${paths.flatMap(path => path.split('/')).filter(Boolean).join('/')}`
 }
 
-function normalizePath(path: string): string {
+export function normalizePath(path: string): string {
 	return joinPath(path)
 }

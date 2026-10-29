@@ -15,6 +15,6 @@ declare module '#imports' {
 	import type { H3Event } from 'h3'
 
 	export { createError, eventHandler, toWebRequest } from 'h3'
-	export { useRuntimeConfig, useNitroApp, useEvent, defineNitroPlugin } from 'nitropack/runtime'
+	export { defineNitroPlugin, useEvent, useNitroApp, useRuntimeConfig } from 'nitropack/runtime'
 	export function useBetterAuth(event?: H3Event): BetterAuthResult
 }

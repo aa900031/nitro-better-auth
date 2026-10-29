@@ -5,15 +5,19 @@ import process from 'node:process'
 import { defineNitroPlugin, useRuntimeConfig } from '#imports'
 import loadServerOptions from '#nitro-better-auth/server-options.mjs'
 import { betterAuth as createBetterAuth } from 'better-auth'
-import { createRequestInstanceCache, resolveRuntimeBetterAuthOptions } from '../utils/auth-runtime'
+import { resolveRuntimeBetterAuthOptions } from '../utils/auth-runtime'
 import { createInferredBaseURLWarning } from '../utils/runtime-origin'
 
 export default defineNitroPlugin((nitroApp) => {
-	const instances = createRequestInstanceCache<H3Event, BetterAuthResult>()
+	const instances = new WeakMap<H3Event, BetterAuthResult>()
 	const warnInferred = createInferredBaseURLWarning(message => console.warn(message))
 	nitroApp.hooks.hook('request', (event) => {
 		Object.defineProperty(event.context, 'betterAuth', {
-			get: () => instances.get(event, () => {
+			get: () => {
+				const existing = instances.get(event)
+				if (existing)
+					return existing
+
 				const opts = loadServerOptions()
 				const runtimeConfig = useRuntimeConfig(event) as unknown as BetterAuthRuntimeConfig
 				const resolved = resolveRuntimeBetterAuthOptions(opts || {}, {
@@ -24,8 +28,10 @@ export default defineNitroPlugin((nitroApp) => {
 					onInferred: warnInferred,
 					warn: warning => console.warn(warning),
 				})
-				return createBetterAuth(resolved.options)
-			}),
+				const instance = createBetterAuth(resolved.options)
+				instances.set(event, instance)
+				return instance
+			},
 		})
 	})
 })

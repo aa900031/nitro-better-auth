@@ -5,12 +5,12 @@ import process from 'node:process'
 import { defineNitroPlugin, useRuntimeConfig } from '#imports'
 import loadServerOptions from '#nitro-better-auth/server-options.mjs'
 import { betterAuth as createBetterAuth } from 'better-auth'
-import { createAppInstanceCache, resolveRuntimeBetterAuthOptions } from '../utils/auth-runtime'
+import { resolveRuntimeBetterAuthOptions } from '../utils/auth-runtime'
 import { createInferredBaseURLWarning } from '../utils/runtime-origin'
 
 export default defineNitroPlugin((nitroApp) => {
 	const warnInferred = createInferredBaseURLWarning(message => console.warn(message))
-	const instances = createAppInstanceCache<BetterAuthResult>()
+	const instances = new Map<string | undefined, BetterAuthResult>()
 	Object.defineProperty(nitroApp, '_betterAuth', {
 		get: () => getter(),
 	})
@@ -37,10 +37,12 @@ export default defineNitroPlugin((nitroApp) => {
 			onInferred: warnInferred,
 			warn: warning => console.warn(warning),
 		})
-		return instances.get(
-			resolved.cacheKey,
-			() => createBetterAuth(resolved.options),
-		)
+		let instance = instances.get(resolved.cacheKey)
+		if (!instance) {
+			instance = createBetterAuth(resolved.options)
+			instances.set(resolved.cacheKey, instance)
+		}
+		return instance
 	}
 })
 

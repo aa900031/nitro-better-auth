@@ -1,7 +1,7 @@
 import type { BetterAuthOptions } from 'better-auth'
 import type { H3Event } from 'h3'
 import { getRequestHost, getRequestProtocol } from 'h3'
-import { resolveBetterAuthOptions } from './base-url'
+import { resolveBetterAuthOptions } from './better-auth-options'
 import { getDevelopmentTrustedOrigins, resolveRuntimeOrigin } from './runtime-origin'
 import { withDevTrustedOrigins } from './trusted-origins'
 
@@ -64,32 +64,6 @@ export function resolveRuntimeBetterAuthOptions<T extends object>(
 	}
 
 	return { options: resolvedOptions, cacheKey }
-}
-
-export function createAppInstanceCache<T>(): {
-	get: (key: string | undefined, create: () => T) => T
-} {
-	const instances = new Map<string | undefined, T>()
-	return {
-		get(key, create) {
-			if (!instances.has(key))
-				instances.set(key, create())
-			return instances.get(key)!
-		},
-	}
-}
-
-export function createRequestInstanceCache<K extends object, T>(): {
-	get: (key: K, create: () => T) => T
-} {
-	const instances = new WeakMap<K, T>()
-	return {
-		get(key, create) {
-			if (!instances.has(key))
-				instances.set(key, create())
-			return instances.get(key)!
-		},
-	}
 }
 
 function getEventOrigin(event?: H3Event): string | undefined {

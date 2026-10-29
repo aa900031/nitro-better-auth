@@ -1,10 +1,6 @@
 import { createEvent } from 'h3'
-import { describe, expect, it, vi } from 'vitest'
-import {
-	createAppInstanceCache,
-	createRequestInstanceCache,
-	resolveRuntimeBetterAuthOptions,
-} from './auth-runtime'
+import { describe, expect, it } from 'vitest'
+import { resolveRuntimeBetterAuthOptions } from './auth-runtime'
 
 type TrustedOriginsResolver = (request?: Request) => Promise<string[]>
 
@@ -115,30 +111,5 @@ describe('auth runtime lifecycle', () => {
 		})
 
 		expect(resolved.options).toBe(options)
-	})
-
-	it('reuses app instances only for the same resolved cache key', () => {
-		const cache = createAppInstanceCache<object>()
-		const create = vi.fn(() => ({}))
-
-		const stable = cache.get(undefined, create)
-		expect(cache.get(undefined, create)).toBe(stable)
-
-		const first = cache.get('http://first.example.com:3000', create)
-		expect(cache.get('http://first.example.com:3000', create)).toBe(first)
-		expect(cache.get('http://second.example.com:4000', create)).not.toBe(first)
-		expect(create).toHaveBeenCalledTimes(3)
-	})
-
-	it('reuses request instances only within the same event', () => {
-		const cache = createRequestInstanceCache<object, object>()
-		const create = vi.fn(() => ({}))
-		const firstEvent = {}
-		const secondEvent = {}
-
-		const first = cache.get(firstEvent, create)
-		expect(cache.get(firstEvent, create)).toBe(first)
-		expect(cache.get(secondEvent, create)).not.toBe(first)
-		expect(create).toHaveBeenCalledTimes(2)
 	})
 })

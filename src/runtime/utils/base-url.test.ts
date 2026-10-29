@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import {
 	resolveAuthBaseURL,
-	resolveBetterAuthOptions,
 	resolveHandlerBasePath,
 	resolveServerBaseURL,
 	validateSiteURL,
 } from './base-url'
+import { resolveBetterAuthOptions } from './better-auth-options'
 
 const defaultContext = {
 	dev: false,
@@ -214,6 +214,23 @@ describe('base URL resolution', () => {
 				siteURL: 'https://site.example.com',
 			})).toBe(options)
 			expect(options.baseURL).toBe(baseURL)
+		})
+
+		it('adds the mounted path to a dynamic baseURL object under a Nitro subpath', () => {
+			const baseURL = {
+				allowedHosts: ['app.example.com'],
+				protocol: 'https',
+			}
+			const resolved = resolveBetterAuthOptions({ baseURL }, {
+				...defaultContext,
+				nitroBasePath: '/dashboard/',
+			})
+
+			expect(resolved).toEqual({
+				baseURL,
+				basePath: '/dashboard/api/auth',
+			})
+			expect(resolved.baseURL).toBe(baseURL)
 		})
 
 		it('adds the mounted path as basePath when an explicit baseURL contains only an origin', () => {
