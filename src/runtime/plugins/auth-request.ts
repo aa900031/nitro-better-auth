@@ -1,10 +1,10 @@
-import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 import type { H3Event } from 'h3'
+import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 import type { BetterAuthRuntimeConfig } from '../utils/auth-runtime'
 import process from 'node:process'
+import { betterAuth as createBetterAuth } from 'better-auth'
 import { defineNitroPlugin, useRuntimeConfig } from '#imports'
 import loadServerOptions from '#nitro-better-auth/server-options.mjs'
-import { betterAuth as createBetterAuth } from 'better-auth'
 import { resolveRuntimeBetterAuthOptions } from '../utils/auth-runtime'
 import { createInferredBaseURLWarning } from '../utils/runtime-origin'
 

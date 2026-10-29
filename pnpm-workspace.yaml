@@ -9,5 +9,5 @@ packages:
   - ./
   - ./playground
 
-onlyBuiltDependencies:
-  - esbuild
+allowBuilds:
+  esbuild: true
