@@ -13,29 +13,9 @@ export function resolveRuntimeOrigin({
 	env: Record<string, string | undefined>
 }): RuntimeOrigin | undefined {
 	if (dev) {
-		const proxyOrigin = readDevelopmentURL(env.__NUXT_DEV__, value => value?.proxy?.url)
-		if (proxyOrigin) {
-			return {
-				origin: proxyOrigin,
-				source: 'Nuxt development proxy',
-			}
-		}
-
-		const viteOrigin = readDevelopmentURL(env.NUXT_VITE_NODE_OPTIONS, value => value?.baseURL)
-		if (viteOrigin) {
-			return {
-				origin: viteOrigin,
-				source: 'Nuxt Vite development URL',
-			}
-		}
-
-		const listenerOrigin = resolveNitroListenerOrigin(env)
-		if (listenerOrigin) {
-			return {
-				origin: listenerOrigin,
-				source: 'Nitro development environment',
-			}
-		}
+		const developmentOrigin = resolveDevelopmentOrigin(env)
+		if (developmentOrigin)
+			return developmentOrigin
 	}
 
 	if (env.VERCEL_URL) {
@@ -60,6 +40,18 @@ export function resolveRuntimeOrigin({
 	return undefined
 }
 
+export function getDevelopmentTrustedOrigins(
+	env: Record<string, string | undefined>,
+): string[] {
+	const developmentOrigin = resolveDevelopmentOrigin(env)
+	if (!developmentOrigin)
+		return ['http://localhost:3000']
+
+	const url = new URL(developmentOrigin.origin)
+	const localhostOrigin = `${url.protocol}//localhost${url.port ? `:${url.port}` : ''}`
+	return [...new Set([localhostOrigin, url.origin])]
+}
+
 export function createInferredBaseURLWarning(
 	warn: (message: string) => void,
 ): (baseURL: string, source: string) => void {
@@ -72,6 +64,31 @@ export function createInferredBaseURLWarning(
 			`[nitro-better-auth] Using inferred baseURL "${baseURL}" from ${source}. Set NUXT_PUBLIC_SITE_URL for deterministic OAuth callbacks.`,
 		)
 	}
+}
+
+function resolveDevelopmentOrigin(
+	env: Record<string, string | undefined>,
+): RuntimeOrigin | undefined {
+	const proxyOrigin = readDevelopmentURL(env.__NUXT_DEV__, value => value?.proxy?.url)
+	if (proxyOrigin) {
+		return {
+			origin: proxyOrigin,
+			source: 'Nuxt development proxy',
+		}
+	}
+
+	const viteOrigin = readDevelopmentURL(env.NUXT_VITE_NODE_OPTIONS, value => value?.baseURL)
+	if (viteOrigin) {
+		return {
+			origin: viteOrigin,
+			source: 'Nuxt Vite development URL',
+		}
+	}
+
+	const listenerOrigin = resolveNitroListenerOrigin(env)
+	return listenerOrigin
+		? { origin: listenerOrigin, source: 'Nitro development environment' }
+		: undefined
 }
 
 function readDevelopmentURL(

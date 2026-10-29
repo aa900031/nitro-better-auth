@@ -62,6 +62,8 @@ export default defineNitroConfig({
 })
 ```
 
+In development, automatic resolution also merges the localhost and Nitro development origins into Better Auth's `trustedOrigins`. Array and async callback configurations are preserved, and the current Better Auth `Request` origin is added when available. Production leaves `trustedOrigins` unchanged.
+
 > [!TIP]
 > When you are using Postgresql as database with Hyperdrive in Cloudflare Worker, you should setup server singleton by request.
 

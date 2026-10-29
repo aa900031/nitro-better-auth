@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
 	createInferredBaseURLWarning,
+	getDevelopmentTrustedOrigins,
 	resolveRuntimeOrigin,
 } from './runtime-origin'
 
@@ -101,5 +102,19 @@ describe('runtime origin resolution', () => {
 		expect(warnings).toEqual([
 			'[nitro-better-auth] Using inferred baseURL "http://localhost:3000" from development fallback. Set NUXT_PUBLIC_SITE_URL for deterministic OAuth callbacks.',
 		])
+	})
+
+	it('derives localhost and actual development origins from the Nitro environment', () => {
+		expect(getDevelopmentTrustedOrigins({
+			NITRO_HOST: 'dev.example.com',
+			NITRO_PORT: '4567',
+		})).toEqual([
+			'http://localhost:4567',
+			'http://dev.example.com:4567',
+		])
+	})
+
+	it('uses localhost:3000 for trusted origins when no development environment is available', () => {
+		expect(getDevelopmentTrustedOrigins({})).toEqual(['http://localhost:3000'])
 	})
 })

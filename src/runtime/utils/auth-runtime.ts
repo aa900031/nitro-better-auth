@@ -1,7 +1,9 @@
+import type { BetterAuthOptions } from 'better-auth'
 import type { H3Event } from 'h3'
 import { getRequestHost, getRequestProtocol } from 'h3'
 import { resolveBetterAuthOptions } from './base-url'
-import { resolveRuntimeOrigin } from './runtime-origin'
+import { getDevelopmentTrustedOrigins, resolveRuntimeOrigin } from './runtime-origin'
+import { withDevTrustedOrigins } from './trusted-origins'
 
 export interface BetterAuthRuntimeConfig {
 	nitroBetterAuth: {
@@ -27,7 +29,7 @@ export function resolveRuntimeBetterAuthOptions<T extends object>(
 ): { options: T, cacheKey?: string } {
 	let cacheKey: string | undefined
 	const moduleConfig = params.runtimeConfig.nitroBetterAuth
-	const resolvedOptions = resolveBetterAuthOptions(options, {
+	let resolvedOptions = resolveBetterAuthOptions(options, {
 		dev: params.dev,
 		nitroBasePath: moduleConfig.nitroBasePath,
 		handlerBasePath: moduleConfig.handlerBasePath,
@@ -46,6 +48,20 @@ export function resolveRuntimeBetterAuthOptions<T extends object>(
 		},
 		warn: params.warn,
 	})
+	const configured = resolvedOptions as { trustedOrigins?: BetterAuthOptions['trustedOrigins'] }
+	const trustedOrigins = withDevTrustedOrigins(configured.trustedOrigins, {
+		dev: params.dev,
+		autoBaseURL: moduleConfig.autoBaseURL,
+		devOrigins: params.dev && moduleConfig.autoBaseURL
+			? getDevelopmentTrustedOrigins(params.env)
+			: [],
+	})
+	if (trustedOrigins !== configured.trustedOrigins) {
+		resolvedOptions = {
+			...resolvedOptions,
+			trustedOrigins,
+		}
+	}
 
 	return { options: resolvedOptions, cacheKey }
 }

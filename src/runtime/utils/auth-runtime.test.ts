@@ -6,6 +6,8 @@ import {
 	resolveRuntimeBetterAuthOptions,
 } from './auth-runtime'
 
+type TrustedOriginsResolver = (request?: Request) => Promise<string[]>
+
 const runtimeConfig = {
 	nitroBetterAuth: {
 		nitroBasePath: '/',
@@ -63,6 +65,56 @@ describe('auth runtime lifecycle', () => {
 			options: { baseURL: 'http://localhost:4567' },
 			cacheKey: undefined,
 		})
+	})
+
+	it('enhances trusted origins without changing native baseURL or advanced options', async () => {
+		const baseURL = { allowedHosts: ['*.example.com'] }
+		const advanced = { trustedProxyHeaders: true }
+		const resolved = resolveRuntimeBetterAuthOptions({
+			baseURL,
+			advanced,
+			trustedOrigins: ['https://app.example.com'],
+		}, {
+			dev: true,
+			env: { NITRO_HOST: 'localhost', NITRO_PORT: '4567' },
+			runtimeConfig,
+		})
+
+		expect(resolved.options.baseURL).toBe(baseURL)
+		expect(resolved.options.advanced).toBe(advanced)
+		expect(typeof resolved.options.trustedOrigins).toBe('function')
+		await expect((resolved.options.trustedOrigins as unknown as TrustedOriginsResolver)(undefined)).resolves.toEqual([
+			'https://app.example.com',
+			'http://localhost:4567',
+		])
+	})
+
+	it('preserves the production trustedOrigins callback by identity', () => {
+		const trustedOrigins = async () => ['https://app.example.com']
+		const resolved = resolveRuntimeBetterAuthOptions({ trustedOrigins }, {
+			dev: false,
+			env: { VERCEL_URL: 'preview.example.com' },
+			runtimeConfig,
+		})
+
+		expect(resolved.options.trustedOrigins).toBe(trustedOrigins)
+	})
+
+	it('does not enhance trusted origins when automatic resolution is disabled', () => {
+		const options = { trustedOrigins: ['https://app.example.com'] }
+		const resolved = resolveRuntimeBetterAuthOptions(options, {
+			dev: true,
+			env: {},
+			event: event('request.example.com'),
+			runtimeConfig: {
+				nitroBetterAuth: {
+					...runtimeConfig.nitroBetterAuth,
+					autoBaseURL: false,
+				},
+			},
+		})
+
+		expect(resolved.options).toBe(options)
 	})
 
 	it('reuses app instances only for the same resolved cache key', () => {
