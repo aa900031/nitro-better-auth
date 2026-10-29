@@ -2,9 +2,11 @@ export interface ServerBaseURLContext {
 	dev: boolean
 	nitroBasePath: string
 	handlerBasePath: string
+	autoBaseURL?: boolean
 	siteURL?: unknown
 	betterAuthURL?: string
 	requestOrigin?: string
+	warn?: (message: string) => void
 }
 
 export function validateSiteURL(value: string): string {
@@ -84,13 +86,58 @@ export function resolveServerBaseURL(context: ServerBaseURLContext): string {
 export function resolveBetterAuthOptions<T extends object>(
 	options: T,
 	context: ServerBaseURLContext,
-): T & { baseURL: string } {
-	if ((options as { baseURL?: unknown }).baseURL)
-		return options as T & { baseURL: string }
+): T {
+	if (context.autoBaseURL === false)
+		return options
+
+	const configured = options as {
+		baseURL?: unknown
+		basePath?: unknown
+	}
+	const mountedAuthPath = context.handlerBasePath
+		? joinPath(context.nitroBasePath, context.handlerBasePath)
+		: undefined
+
+	if (
+		context.dev
+		&& typeof configured.basePath === 'string'
+		&& mountedAuthPath
+		&& normalizePath(configured.basePath) !== mountedAuthPath
+	) {
+		context.warn?.(
+			`[nitro-better-auth] Better Auth basePath "${configured.basePath}" does not match the mounted auth path "${mountedAuthPath}".`,
+		)
+	}
+
+	if (configured.baseURL != null) {
+		if (
+			typeof configured.baseURL !== 'string'
+			|| configured.basePath != null
+			|| !mountedAuthPath
+			|| mountedAuthPath === '/api/auth'
+			|| hasPathname(configured.baseURL)
+		) {
+			return options
+		}
+
+		return {
+			...options,
+			basePath: mountedAuthPath,
+		}
+	}
 
 	return {
 		...options,
 		baseURL: resolveServerBaseURL(context),
+	}
+}
+
+function hasPathname(value: string): boolean {
+	try {
+		return new URL(value).pathname !== '/'
+	}
+	catch {
+		return true
 	}
 }
 

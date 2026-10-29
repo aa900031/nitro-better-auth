@@ -47,6 +47,19 @@ NUXT_PUBLIC_SITE_URL=https://example.com
 
 An explicit `baseURL` in server options always takes priority. Production never derives the canonical URL from `Host` or forwarded headers. Nitro's configured base path and a custom static `handlerPath` are included in automatically resolved endpoint URLs.
 
+When an explicit `baseURL` contains only an origin, the module adds the mounted auth path as Better Auth's `basePath` when needed. An explicit `basePath` or a `baseURL` that already contains a pathname is never changed.
+
+To leave all Better Auth URL options untouched, disable automatic resolution:
+
+```typescript [nitro.config.ts]
+export default defineNitroConfig({
+	modules: ['nitro-better-auth'],
+	betterAuth: {
+		autoBaseURL: false,
+	},
+})
+```
+
 > [!TIP]
 > When you are using Postgresql as database with Hyperdrive in Cloudflare Worker, you should setup server singleton by request.
 

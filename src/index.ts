@@ -9,6 +9,8 @@ export { resolveAuthBaseURL, resolveHandlerBasePath } from './runtime/utils/base
 export interface ModuleOptions {
 	singleton?: 'app' | 'request'
 	handlerPath?: string
+	/** Enable automatic Server Base URL and Base Path resolution. @default true */
+	autoBaseURL?: boolean
 	options?: {
 		path: string
 	}
@@ -20,6 +22,7 @@ const DEFAULT_OPTIONS = {
 		path: 'better-auth/server-options',
 	},
 	handlerPath: '/api/auth/**',
+	autoBaseURL: true,
 }
 
 export default defineNitroModule({
@@ -32,6 +35,7 @@ export default defineNitroModule({
 		nitro.options.runtimeConfig.nitroBetterAuth = {
 			nitroBasePath: nitro.options.baseURL || '/',
 			handlerBasePath: handlerBasePath || '',
+			autoBaseURL: options.autoBaseURL,
 		}
 
 		nitro.options.externals ??= {} as any

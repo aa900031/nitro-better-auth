@@ -11,6 +11,7 @@ interface RuntimeConfig {
 	nitroBetterAuth: {
 		nitroBasePath: string
 		handlerBasePath: string
+		autoBaseURL: boolean
 	}
 	public?: {
 		siteUrl?: unknown
@@ -38,9 +39,11 @@ export default defineNitroPlugin((nitroApp) => {
 				dev: import.meta.dev === true,
 				nitroBasePath: moduleConfig.nitroBasePath,
 				handlerBasePath: moduleConfig.handlerBasePath,
+				autoBaseURL: moduleConfig.autoBaseURL,
 				siteURL: runtimeConfig.public?.siteUrl || process.env.NUXT_PUBLIC_SITE_URL,
 				betterAuthURL: process.env.BETTER_AUTH_URL,
 				requestOrigin: import.meta.dev === true ? getEventOrigin(event) : undefined,
+				warn: warning => console.warn(warning),
 			})
 			betterAuth = createBetterAuth(resolvedOptions)
 		}
