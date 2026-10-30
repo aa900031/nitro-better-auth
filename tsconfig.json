@@ -4,7 +4,8 @@
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
 		"types": [
-			"node"
+			"node",
+			"./shims.d.ts"
 		]
 	},
 	"include": [

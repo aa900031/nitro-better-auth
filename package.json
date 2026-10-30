@@ -40,7 +40,7 @@
 		"release": "release-it",
 		"lint": "eslint .",
 		"test": "vitest run",
-		"test:types": "tsc --noEmit"
+		"typecheck": "tsc --noEmit"
 	},
 	"peerDependencies": {
 		"better-auth": "^1.2.0",
