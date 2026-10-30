@@ -9,6 +9,6 @@
 	"dependencies": {
 		"better-auth": "^1.7.1",
 		"nitro-better-auth": "workspace:*",
-		"nitropack": "^2.13.4"
+		"nitropack": "^2.13.5"
 	}
 }
