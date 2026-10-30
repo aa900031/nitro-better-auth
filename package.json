@@ -69,7 +69,7 @@
 		"@aa900031/release-it-config": "^1.0.0",
 		"@tsconfig/node24": "^24.0.0",
 		"@types/node": "^26.6.6",
-		"@vitest/coverage-istanbul": "^4.1.12",
+		"@vitest/coverage-istanbul": "^5.0.5",
 		"better-auth": "^1.7.1",
 		"chokidar": "^5.0.0",
 		"defu": "^6.1.7",
@@ -81,7 +81,8 @@
 		"release-it": "^20.2.1",
 		"tsdown": "^0.23.3",
 		"typescript": "~5.9.3",
-		"vitest": "^4.1.12",
+		"vite": "^8.3.5",
+		"vitest": "^5.0.5",
 		"wait-on": "^9.5.1"
 	}
 }

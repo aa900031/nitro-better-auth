@@ -34,13 +34,15 @@ jobs:
         uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          directory: ./.vitest/coverage
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./reports/junit.xml
+          files: ./.vitest/junit/output.xml
   typecheck:
     runs-on: ubuntu-latest
     steps:
