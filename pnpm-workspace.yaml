@@ -1,9 +1,10 @@
-autoInstallPeers: false
-shamefullyHoist: true
-shellEmulator: true
-strictPeerDependencies: false
+minimumReleaseAgeExcludePrune: true
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 432000
+autoInstallPeers: false
+strictPeerDependencies: false
+shamefullyHoist: true
+shellEmulator: true
 
 packages:
   - ./
