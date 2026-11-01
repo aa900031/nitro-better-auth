@@ -1,9 +1,8 @@
 import type { H3Event } from 'h3'
 import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 import { betterAuth as createBetterAuth } from 'better-auth'
-import { defu } from 'defu'
-import { defineNitroPlugin } from '#imports'
-import loadServerOptions from '#nitro-better-auth/server-options.mjs'
+import { defineNitroPlugin, useRuntimeConfig } from '#imports'
+import { resolveBetterAuthOptions } from '../utils/better-auth-options'
 
 export default defineNitroPlugin((nitroApp) => {
 	const instances = new WeakMap<H3Event, BetterAuthResult>()
@@ -14,10 +13,9 @@ export default defineNitroPlugin((nitroApp) => {
 				if (instance)
 					return instance
 
-				const opts = loadServerOptions()
-				const betterAuth = createBetterAuth(
-					defu(opts, {}),
-				)
+				const runtimeConfig = useRuntimeConfig()
+				const options = resolveBetterAuthOptions(runtimeConfig, event)
+				const betterAuth = createBetterAuth(options)
 				instances.set(event, betterAuth)
 
 				return betterAuth

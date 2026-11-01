@@ -21,6 +21,7 @@ export default defineConfig([
 	{
 		...base,
 		entry: [
+			'src/config.ts',
 			'src/index.ts',
 			'!src/runtime/**/*',
 		],
@@ -39,7 +40,9 @@ export default defineConfig([
 			neverBundle: [
 				...base.deps.neverBundle,
 				'#imports',
+				'#nitro-better-auth/server-options-context.mjs',
 				'#nitro-better-auth/server-options.mjs',
+				'nitro-better-auth/config',
 			],
 		},
 		outExtensions: () => ({

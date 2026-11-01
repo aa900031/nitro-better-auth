@@ -1,7 +1,15 @@
 declare module '#nitro-better-auth/server-options.mjs' {
-	import type { BetterAuthOptions } from 'better-auth'
+	import type { AuthOptionsFactory } from './src/config'
 
-	export default function (): BetterAuthOptions
+	const factory: AuthOptionsFactory
+	export default factory
+}
+
+declare module '#nitro-better-auth/server-options-context.mjs' {
+	import type { ServerOptionsContextConfig } from './src/runtime/utils/better-auth-options'
+
+	const config: ServerOptionsContextConfig
+	export default config
 }
 
 declare module '#nitro-better-auth/types/server-options' {

@@ -1,9 +1,8 @@
-/* eslint-disable ts/explicit-function-return-type */
-import type { BetterAuthOptions } from 'better-auth'
 import { anonymous } from 'better-auth/plugins'
+import { defineAuthOptions } from 'nitro-better-auth/config'
 
-export default () => ({
+export default defineAuthOptions(() => ({
 	plugins: [
 		anonymous(),
 	],
-} satisfies BetterAuthOptions)
+}))

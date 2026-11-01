@@ -1,8 +1,7 @@
 import type { BetterAuthResult } from '#nitro-better-auth/types/server-options'
 import { betterAuth as createBetterAuth } from 'better-auth'
-import { defu } from 'defu'
-import { defineNitroPlugin } from '#imports'
-import loadServerOptions from '#nitro-better-auth/server-options.mjs'
+import { defineNitroPlugin, useRuntimeConfig } from '#imports'
+import { resolveBetterAuthOptions } from '../utils/better-auth-options'
 
 export default defineNitroPlugin((nitroApp) => {
 	Object.defineProperty(nitroApp, '_betterAuth', {
@@ -17,10 +16,9 @@ export default defineNitroPlugin((nitroApp) => {
 	let betterAuth: BetterAuthResult | undefined
 	function getter(): BetterAuthResult | undefined {
 		if (betterAuth == null) {
-			const opts = loadServerOptions()
-			betterAuth = createBetterAuth(
-				defu(opts, {}),
-			)
+			const runtimeConfig = useRuntimeConfig()
+			const options = resolveBetterAuthOptions(runtimeConfig)
+			betterAuth = createBetterAuth(options)
 		}
 		return betterAuth
 	}

@@ -1,23 +1,27 @@
+import type { Defu } from 'defu'
 import defu from 'defu'
 import { defineNitroModule } from 'nitropack/kit'
+import { addServerOptionsContext } from './template/server-options-context'
 import { addUserConfig } from './template/user-options'
 import { addHandler, addImports, addPlugin, addTypeReference, createResolver } from './utils/nitro'
 
 export interface ModuleOptions {
 	singleton?: 'app' | 'request'
-	handlerPath?: string
+	mountPath?: string
 	options?: {
 		path: string
 	}
 }
+
+export type ResolvedMoudleOptions = Defu<ModuleOptions, [typeof DEFAULT_OPTIONS]>
 
 const DEFAULT_OPTIONS = {
 	singleton: 'app',
 	options: {
 		path: 'better-auth/server-options',
 	},
-	handlerPath: '/api/auth/**',
-}
+	mountPath: '/api/auth',
+} as const
 
 export default defineNitroModule({
 	name: 'nitro-better-auth',
@@ -88,12 +92,16 @@ export default defineNitroModule({
 			}],
 		)
 		addHandler(nitro, {
-			route: options.handlerPath,
+			route: `${options.mountPath}/**`,
 			handler: resolver.resolve('./runtime/api/auth'),
 		})
+		addServerOptionsContext(
+			nitro,
+			options,
+		)
 		await addUserConfig(
 			nitro,
-			options.options.path,
+			options,
 		)
 	},
 })
