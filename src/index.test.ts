@@ -24,7 +24,12 @@ describe('nitro better Auth module', () => {
 			await rm(rootDir, { recursive: true, force: true })
 	})
 
-	it('registers the base path and exposes runtime candidates', async () => {
+	it.each([
+		[{ mountPath: '/custom-auth' }, '/custom-auth', false],
+		[{ handlerPath: '/custom-auth/**' }, '/custom-auth', true],
+		[{ handlerPath: '/**' }, '/', true],
+	] as const)('registers the base path from %j', async (betterAuth, mountPath, legacy) => {
+		const warning = vi.spyOn(console, 'warn').mockImplementation(() => {})
 		rootDir = await mkdtemp(join(tmpdir(), 'nitro-better-auth-'))
 		const optionsDir = join(rootDir, 'better-auth')
 		await mkdir(optionsDir)
@@ -36,9 +41,7 @@ describe('nitro better Auth module', () => {
 				srcDir: rootDir,
 				buildDir: join(rootDir, '.nitro'),
 				dev: false,
-				betterAuth: {
-					mountPath: '/custom-auth',
-				},
+				betterAuth,
 				experimental: {},
 				externals: { inline: [] },
 				handlers: [],
@@ -59,9 +62,13 @@ describe('nitro better Auth module', () => {
 			},
 		} as unknown as Nitro
 		await nitroBetterAuth.setup(nitro)
+		expect(warning).toHaveBeenCalledTimes(legacy ? 1 : 0)
+		if (legacy)
+			expect(warning).toHaveBeenCalledWith(expect.stringContaining(`mountPath: '${mountPath}'`))
+		warning.mockRestore()
 
 		expect(nitro.options.handlers).toContainEqual(expect.objectContaining({
-			route: '/custom-auth/**',
+			route: mountPath === '/' ? '/**' : `${mountPath}/**`,
 		}))
 		const virtualModule = nitro.options.virtual['#nitro-better-auth/server-options.mjs']
 		expect(virtualModule).toBeTypeOf('function')
@@ -69,7 +76,16 @@ describe('nitro better Auth module', () => {
 		const context = nitro.options.virtual['#nitro-better-auth/server-options-context.mjs']
 		expect(context).toBeTypeOf('function')
 		const contextSource = await (context as () => string)()
-		expect(contextSource).toContain('mountPath: "/custom-auth"')
+		expect(contextSource).toContain(`mountPath: "${mountPath}"`)
 		expect(contextSource).toContain('dev: false')
+	})
+
+	it.each([
+		[{ handlerPath: '/custom-auth' }, 'Cannot migrate handlerPath'],
+		[{ handlerPath: '/custom/*' }, 'Cannot migrate handlerPath'],
+		[{ handlerPath: '/custom-auth/**', mountPath: '/other' }, 'Configure either mountPath'],
+	] as const)('rejects unsupported legacy configuration %j', async (betterAuth, message) => {
+		const nitro = { options: { betterAuth } } as unknown as Nitro
+		await expect(nitroBetterAuth.setup(nitro)).rejects.toThrow(message)
 	})
 })

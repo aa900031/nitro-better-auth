@@ -35,6 +35,8 @@ export default defineNitroConfig({
 })
 ```
 
+The former `handlerPath` option is deprecated. A static path ending in `/**`, such as `/api/auth/**`, is migrated to `mountPath: '/api/auth'` with a warning. Other route patterns and configurations that set both options fail at startup; update those configurations to use `mountPath`.
+
 > [!TIP]
 > When you are using Postgresql as database with Hyperdrive in Cloudflare Worker, you should setup server singleton by request.
 

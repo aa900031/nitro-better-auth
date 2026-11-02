@@ -11,12 +11,14 @@ import { addImports, addPlugin, addTypeReference, createResolver } from './utils
 export interface ModuleOptions {
 	singleton?: 'app' | 'request'
 	mountPath?: string
+	/** @deprecated Use mountPath instead. */
+	handlerPath?: string
 	options?: {
 		path: string
 	}
 }
 
-export type ResolvedMoudleOptions = Defu<ModuleOptions, [typeof DEFAULT_OPTIONS]>
+export type ResolvedMoudleOptions = Defu<Omit<ModuleOptions, 'handlerPath'>, [typeof DEFAULT_OPTIONS]>
 
 const DEFAULT_OPTIONS = {
 	singleton: 'app',
@@ -103,9 +105,24 @@ export default defineNitroModule({
 function resolveOptions(
 	nitro: Nitro,
 ): ResolvedMoudleOptions {
-	const opts = defu(nitro.options.betterAuth, DEFAULT_OPTIONS)
-	opts.mountPath = joinURL('/', cleanDoubleSlashes(opts.mountPath))
-	return opts
+	const { handlerPath, ...rawOptions } = nitro.options.betterAuth ?? {}
+	if (handlerPath !== undefined) {
+		if (rawOptions.mountPath !== undefined) {
+			throw new Error(
+				'[nitro-better-auth] Configure either mountPath or the deprecated handlerPath, not both. Remove handlerPath.',
+			)
+		}
+		if (typeof handlerPath !== 'string' || !/^\/(?:[^/*:?]+\/)*\*\*$/.test(handlerPath)) {
+			throw new Error(
+				'[nitro-better-auth] Cannot migrate handlerPath. Use a static path ending in /**, or replace it with mountPath manually.',
+			)
+		}
+		rawOptions.mountPath = handlerPath.slice(0, -3) || '/'
+		console.warn(`[nitro-better-auth] handlerPath is deprecated. Replace it with mountPath: '${rawOptions.mountPath}'.`)
+	}
+	const resolvedOptions = defu(rawOptions, DEFAULT_OPTIONS)
+	resolvedOptions.mountPath = joinURL('/', cleanDoubleSlashes(resolvedOptions.mountPath))
+	return resolvedOptions
 }
 
 declare module 'nitropack' {
