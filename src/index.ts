@@ -1,6 +1,8 @@
 import type { Defu } from 'defu'
+import type { Nitro } from 'nitropack'
 import defu from 'defu'
 import { defineNitroModule } from 'nitropack/kit'
+import { cleanDoubleSlashes, joinURL } from 'ufo'
 import { addServerOptionsContext } from './template/server-options-context'
 import { addUserConfig } from './template/user-options'
 import { addAuthHandler } from './utils/auth-handler'
@@ -27,7 +29,7 @@ const DEFAULT_OPTIONS = {
 export default defineNitroModule({
 	name: 'nitro-better-auth',
 	async setup(nitro) {
-		const options = defu(nitro.options.betterAuth, DEFAULT_OPTIONS)
+		const options = resolveOptions(nitro)
 		const resolver = createResolver(import.meta.url)
 
 		nitro.options.externals ??= {} as any
@@ -97,6 +99,14 @@ export default defineNitroModule({
 		await addUserConfig(nitro, options)
 	},
 })
+
+function resolveOptions(
+	nitro: Nitro,
+): ResolvedMoudleOptions {
+	const opts = defu(nitro.options.betterAuth, DEFAULT_OPTIONS)
+	opts.mountPath = joinURL('/', cleanDoubleSlashes(opts.mountPath))
+	return opts
+}
 
 declare module 'nitropack' {
 	interface NitroOptions {

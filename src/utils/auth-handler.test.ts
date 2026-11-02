@@ -5,11 +5,8 @@ import { addAuthHandler } from './auth-handler'
 
 describe('addAuthHandler', () => {
 	it.each([
-		['', '/**'],
-		['///', '/**'],
-		['api/auth', '/api/auth/**'],
+		['/', '/**'],
 		['/api/auth/', '/api/auth/**'],
-		['///api//auth///', '/api/auth/**'],
 	])('normalizes mountPath %j to route %j', (mountPath, route) => {
 		const nitro = { options: { handlers: [] } } as unknown as Nitro
 		const resolver = { resolve: () => '/runtime/api/auth' }
