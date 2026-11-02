@@ -4,7 +4,7 @@ import { defineNitroModule } from 'nitropack/kit'
 import { addServerOptionsContext } from './template/server-options-context'
 import { addUserConfig } from './template/user-options'
 import { addAuthHandler } from './utils/auth-handler'
-import { addHandler, addImports, addPlugin, addTypeReference, createResolver } from './utils/nitro'
+import { addImports, addPlugin, addTypeReference, createResolver } from './utils/nitro'
 
 export interface ModuleOptions {
 	singleton?: 'app' | 'request'
