@@ -13,7 +13,7 @@ export default defineNitroPlugin((nitroApp) => {
 				if (instance)
 					return instance
 
-				const runtimeConfig = useRuntimeConfig()
+				const runtimeConfig = useRuntimeConfig(event)
 				const options = resolveBetterAuthOptions(runtimeConfig, event)
 				const betterAuth = createBetterAuth(options)
 				instances.set(event, betterAuth)
