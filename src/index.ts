@@ -3,6 +3,7 @@ import defu from 'defu'
 import { defineNitroModule } from 'nitropack/kit'
 import { addServerOptionsContext } from './template/server-options-context'
 import { addUserConfig } from './template/user-options'
+import { addAuthHandler } from './utils/auth-handler'
 import { addHandler, addImports, addPlugin, addTypeReference, createResolver } from './utils/nitro'
 
 export interface ModuleOptions {
@@ -91,18 +92,9 @@ export default defineNitroModule({
 				from: resolver.resolve('./runtime/utils/auth-middleware'),
 			}],
 		)
-		addHandler(nitro, {
-			route: `${options.mountPath}/**`,
-			handler: resolver.resolve('./runtime/api/auth'),
-		})
-		addServerOptionsContext(
-			nitro,
-			options,
-		)
-		await addUserConfig(
-			nitro,
-			options,
-		)
+		addAuthHandler(nitro, resolver, options)
+		addServerOptionsContext(nitro, options)
+		await addUserConfig(nitro, options)
 	},
 })
 

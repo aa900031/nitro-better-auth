@@ -5,9 +5,13 @@ import { fileURLToPath } from 'node:url'
 import { dirname, isAbsolute, normalize, resolve } from 'pathe'
 import { resolvePathType } from './fs'
 
+export interface Resolver {
+	resolve: (...path: string[]) => string
+}
+
 export function createResolver(
 	base: string | URL,
-): { resolve: (...path: string[]) => string } {
+): Resolver {
 	base = base.toString()
 	if (base.startsWith('file://')) {
 		base = dirname(fileURLToPath(base))
