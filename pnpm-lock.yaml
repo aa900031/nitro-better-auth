@@ -24,7 +24,7 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5(vitest@5.0.5)
       better-auth:
-        specifier: ^1.7.12
+        specifier: ^1.7.14
         version: 1.7.14(vitest@5.0.5)
       chokidar:
         specifier: ^5.0.0
