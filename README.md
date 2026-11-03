@@ -107,15 +107,21 @@ export default defineAuthOptions(({ basePath, baseURL }) => ({
 
 ### Runtime options
 
-Set module-managed options through Nitro's private runtime config:
+The module registers `runtimeConfig.betterAuth` defaults, so the matching environment variables work without any configuration:
+
+| Environment variable | Option |
+| --- | --- |
+| `NITRO_BETTER_AUTH_BASE_URL` | `baseURL` |
+| `NITRO_BETTER_AUTH_BASE_PATH` | `basePath` |
+| `NITRO_BETTER_AUTH_SECRET` | `secret` |
+
+Build-time values can also be set through Nitro's private runtime config, and are overridden by the environment variables above at runtime:
 
 ```typescript [nitro.config.ts]
 export default defineNitroConfig({
 	runtimeConfig: {
 		betterAuth: {
-			baseURL: '', // Set NITRO_BETTER_AUTH_BASE_URL at runtime.
-			basePath: '', // Set NITRO_BETTER_AUTH_BASE_PATH at runtime.
-			secret: '', // Set NITRO_BETTER_AUTH_SECRET at runtime.
+			basePath: '/external/auth',
 		},
 	},
 })

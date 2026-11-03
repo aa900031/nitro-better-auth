@@ -62,7 +62,7 @@ function resolveBaseURL(
 	if (typeof baseURL === 'string' && baseURL)
 		return baseURL
 
-	if (env.BETTER_AUTH_URL !== undefined)
+	if (env.BETTER_AUTH_URL)
 		return
 
 	const siteUrl = runtimeConfig.public?.siteUrl
@@ -171,10 +171,9 @@ function warnPathMismatch(
 	options?: BetterAuthOptions,
 ): void {
 	warnPath(basePath, options?.basePath, 'basePath')
-	const effectiveBasePath = options?.basePath ?? basePath
 	const baseURL = typeof options?.baseURL === 'string' ? options.baseURL : options?.baseURL?.fallback
-	warnURLPath(basePath, effectiveBasePath, baseURL, 'baseURL')
-	warnURLPath(basePath, effectiveBasePath, env.BETTER_AUTH_URL, 'BETTER_AUTH_URL')
+	warnURLPath(basePath, baseURL, 'baseURL')
+	warnURLPath(basePath, env.BETTER_AUTH_URL, 'BETTER_AUTH_URL')
 }
 
 function warnPath(
@@ -191,7 +190,6 @@ function warnPath(
 
 function warnURLPath(
 	registeredPath: string,
-	basePath: string,
 	value: string | undefined,
 	source: string,
 ): void {
@@ -199,7 +197,8 @@ function warnURLPath(
 		return
 	try {
 		const path = new URL(value).pathname
-		warnPath(registeredPath, path === '/' ? basePath : path, source)
+		if (path !== '/')
+			warnPath(registeredPath, path, source)
 	}
 	catch {}
 }

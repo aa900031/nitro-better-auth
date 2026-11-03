@@ -105,6 +105,15 @@ describe('better Auth option candidates', () => {
 		})
 	})
 
+	it('ignores an empty BETTER_AUTH_URL when inferring baseURL', () => {
+		vi.stubEnv('BETTER_AUTH_URL', '')
+
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			createRuntimeConfig('/', 'https://site.example.com'),
+		).baseURL).toBe('https://site.example.com')
+	})
+
 	it('prefers the site URL origin and skips an invalid site URL', () => {
 		vi.stubEnv('VERCEL_URL', 'project.vercel.app')
 
@@ -303,6 +312,7 @@ describe('better Auth option candidates', () => {
 	})
 
 	it('uses private runtime baseURL and basePath before inferred values', () => {
+		vi.spyOn(console, 'warn').mockImplementation(() => {})
 		vi.stubEnv('BETTER_AUTH_URL', 'https://env.example.com/api/auth')
 
 		expect(resolveOptions(
@@ -319,6 +329,7 @@ describe('better Auth option candidates', () => {
 	})
 
 	it('gives factory baseURL and basePath precedence over private runtime values', () => {
+		vi.spyOn(console, 'warn').mockImplementation(() => {})
 		expect(resolveOptions(
 			{ mountPath: '/api/auth', dev: false },
 			createRuntimeConfig('/', undefined, {
@@ -351,6 +362,21 @@ describe('better Auth option candidates', () => {
 		)
 
 		expect(warn).toHaveBeenCalledTimes(1)
+	})
+
+	it('warns only for basePath when an origin-only baseURL accompanies a mismatch', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+		resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			createRuntimeConfig('/', undefined, {
+				basePath: '/runtime/auth',
+				baseURL: 'https://x.example.com',
+			}),
+		)
+
+		expect(warn).toHaveBeenCalledTimes(1)
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('basePath'))
 	})
 
 	it('warns on every explicit path mismatch', () => {
