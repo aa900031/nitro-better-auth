@@ -17,16 +17,13 @@ export function resolveBetterAuthOptions<T extends BetterAuthOptions>(
 	runtimeConfig: NitroRuntimeConfig,
 	event?: H3Event,
 ): T {
-	const contextConfig = serverOptionsContextConfig
-	const factory = loadServerOptions
-	const origin = env.BETTER_AUTH_URL === undefined
-		? resolveBaseURL(runtimeConfig, contextConfig.dev, event)
-		: undefined
+	const { basePath, registeredBasePath } = resolveBasePath(runtimeConfig)
+	const baseURL = resolveBaseURL(runtimeConfig, event)
 	const serverOptionsContext: ServerOptionsContext = {
-		basePath: joinURL(runtimeConfig.app.baseURL, contextConfig.mountPath),
-		...(origin === undefined ? {} : { baseURL: origin }),
+		basePath,
+		...(baseURL === undefined ? {} : { baseURL }),
 	}
-	const userOptions = factory(serverOptionsContext)
+	const userOptions = loadServerOptions(serverOptionsContext)
 	const options: BetterAuthOptions = { ...userOptions }
 	if (options.basePath === undefined)
 		options.basePath = serverOptionsContext.basePath
@@ -40,33 +37,52 @@ export function resolveBetterAuthOptions<T extends BetterAuthOptions>(
 			options.secret = secret
 	}
 
-	warnPathMismatch(serverOptionsContext.basePath, options)
+	warnPathMismatch(registeredBasePath, options)
 	return options as T
+}
+
+function resolveBasePath(
+	runtimeConfig: NitroRuntimeConfig,
+): { basePath: string, registeredBasePath: string } {
+	const registeredBasePath = joinURL(runtimeConfig.app.baseURL, serverOptionsContextConfig.mountPath)
+	const basePath = runtimeConfig.betterAuth?.basePath
+	return {
+		basePath: typeof basePath === 'string' && basePath
+			? basePath
+			: registeredBasePath,
+		registeredBasePath,
+	}
 }
 
 function resolveBaseURL(
 	runtimeConfig: NitroRuntimeConfig,
-	dev: boolean,
 	event?: H3Event,
 ): string | undefined {
+	const baseURL = runtimeConfig.betterAuth?.baseURL
+	if (typeof baseURL === 'string' && baseURL)
+		return baseURL
+
+	if (env.BETTER_AUTH_URL !== undefined)
+		return
+
 	const siteUrl = runtimeConfig.public?.siteUrl
 	if (typeof siteUrl === 'string') {
-		const configuredOrigin = validateURL(siteUrl, dev)
+		const configuredOrigin = validateURL(siteUrl, serverOptionsContextConfig.dev)
 		if (configuredOrigin !== undefined)
 			return configuredOrigin
 	}
 
-	if (dev) {
+	if (serverOptionsContextConfig.dev) {
 		const eventOrigin = resolveEventOrigin(event)
 		if (eventOrigin !== undefined)
-			return validateURL(eventOrigin, dev)
+			return validateURL(eventOrigin, serverOptionsContextConfig.dev)
 	}
 
-	const environmentOrigin = resolveEnvironmentOrigin(dev)
+	const environmentOrigin = resolveEnvironmentOrigin(serverOptionsContextConfig.dev)
 	if (environmentOrigin !== undefined)
 		return environmentOrigin
 
-	if (dev)
+	if (serverOptionsContextConfig.dev)
 		return 'http://localhost:3000'
 }
 

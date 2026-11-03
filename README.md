@@ -99,15 +99,68 @@ import { anonymous } from 'better-auth/plugins'
 import { defineAuthOptions } from 'nitro-better-auth/config'
 
 export default defineAuthOptions(({ basePath, baseURL }) => ({
-	basePath,
-	baseURL,
 	plugins: [
 		anonymous(),
 	],
 }))
 ```
 
-The module infers an origin-only `baseURL` from `runtimeConfig.public.siteUrl` and common development and deployment environments. The candidate `basePath` combines Nitro's `app.baseURL` with the module's `mountPath`, so `/api/auth` under `/shop/` becomes `/shop/api/auth` for Better Auth while Nitro still registers the handler base-relative. Values returned by this factory take precedence. If `BETTER_AUTH_URL` is set, Better Auth handles it directly.
+### Runtime options
+
+Set module-managed options through Nitro's private runtime config:
+
+```typescript [nitro.config.ts]
+export default defineNitroConfig({
+	runtimeConfig: {
+		betterAuth: {
+			baseURL: '', // Set NITRO_BETTER_AUTH_BASE_URL at runtime.
+			basePath: '', // Set NITRO_BETTER_AUTH_BASE_PATH at runtime.
+			secret: '', // Set NITRO_BETTER_AUTH_SECRET at runtime.
+		},
+	},
+})
+```
+
+### Base URL resolution
+
+The module infers an origin-only `baseURL` from `runtimeConfig.public.siteUrl` and common development and deployment environments. Explicit factory and runtime values are passed through. The first available source wins:
+
+| Priority | Source | When used |
+| --- | --- | --- |
+| 1 | `defineAuthOptions` return value | Explicit Better Auth configuration. |
+| 2 | `runtimeConfig.betterAuth.baseURL` | Per-deployment private runtime configuration. |
+| 3 | `BETTER_AUTH_URL` | The module leaves `baseURL` unset; Better Auth reads this environment variable directly. |
+| 4 | `runtimeConfig.public.siteUrl` | The configured public site origin. |
+| 5 | Request origin | Development requests only. |
+| 6 | Nitro listener origin | Development only, including Nuxt development proxy settings. |
+| 7 | `VERCEL_URL` → `CF_PAGES_URL` → `URL` | Supported deployment platform environment variables. |
+| 8 | `http://localhost:3000` | Development fallback only. |
+
+For a dynamic Better Auth `baseURL` object without `fallback`, the resolved runtime or inferred URL becomes its fallback. In production, configure a canonical URL with `runtimeConfig.betterAuth.baseURL`, `runtimeConfig.public.siteUrl`, `BETTER_AUTH_URL`, or a supported platform variable; request-origin inference is development-only.
+
+### Base path resolution
+
+The first available source wins:
+
+| Priority | Source | When used |
+| --- | --- | --- |
+| 1 | `defineAuthOptions` return value | Explicit Better Auth configuration. |
+| 2 | `runtimeConfig.betterAuth.basePath` | Per-deployment private runtime configuration. |
+| 3 | `joinURL(runtimeConfig.app.baseURL, betterAuth.mountPath)` | Default path. For example, `/api/auth` under `/shop/` becomes `/shop/api/auth`. |
+
+Nitro registers the handler with the base-relative module `mountPath`. A resolved `basePath` that differs from the registered route emits a warning, whether it came from the factory or runtime config.
+
+### Secret resolution
+
+Never place a secret in `runtimeConfig.public`. The first available module source wins:
+
+| Priority | Source | When used |
+| --- | --- | --- |
+| 1 | `defineAuthOptions` `secret` or `secrets` | Explicit Better Auth configuration. `secrets` supports versioned rotation. |
+| 2 | `runtimeConfig.betterAuth.secret` | Per-deployment private runtime configuration. |
+| 3 | Better Auth native environment handling | The module leaves the value unset, allowing Better Auth to read `BETTER_AUTH_SECRET`, `BETTER_AUTH_SECRETS`, or `AUTH_SECRET`. |
+
+Use `secrets` in `defineAuthOptions` or `BETTER_AUTH_SECRETS` when rotating keys without invalidating decryptable data. The module does not inject `runtimeConfig.betterAuth.secret` when the factory provides either `secret` or `secrets`.
 
 ## Middlewares
 
