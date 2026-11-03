@@ -5,6 +5,7 @@ import type { AuthOptionsFactory } from '../../config'
 import type { ServerOptionsContextConfig } from './better-auth-options'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { resolveBetterAuthOptions } from './better-auth-options'
+import { resetWarnOnce } from './logger'
 
 const mocks = vi.hoisted(() => ({
 	contextConfig: {
@@ -68,6 +69,7 @@ describe('better Auth option candidates', () => {
 		mocks.contextConfig.dev = false
 		mocks.contextConfig.mountPath = '/api/auth'
 		mocks.loadServerOptions.mockReset()
+		resetWarnOnce()
 	})
 
 	afterEach(() => {
@@ -241,6 +243,7 @@ describe('better Auth option candidates', () => {
 	})
 
 	it('fills only undefined factory options', () => {
+		vi.spyOn(console, 'warn').mockImplementation(() => {})
 		const config = { mountPath: '/api/auth', dev: false }
 		const runtimeConfig = createRuntimeConfig('/', 'https://candidate.example.com')
 
@@ -379,7 +382,7 @@ describe('better Auth option candidates', () => {
 		expect(warn).toHaveBeenCalledWith(expect.stringContaining('basePath'))
 	})
 
-	it('warns on every explicit path mismatch', () => {
+	it('warns once per distinct path mismatch', () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
 		vi.stubEnv('BETTER_AUTH_URL', 'https://env.example.com/wrong')
 
@@ -390,7 +393,7 @@ describe('better Auth option candidates', () => {
 		}))
 		resolveOptions(config, createRuntimeConfig(), () => ({ basePath: '/wrong' }))
 
-		expect(warn).toHaveBeenCalledTimes(5)
+		expect(warn).toHaveBeenCalledTimes(3)
 	})
 
 	it('does not warn for matching paths, origin-only URLs, or dynamic URLs', () => {

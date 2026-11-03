@@ -29,7 +29,7 @@ describe('nitro better Auth module', () => {
 		[{ handlerPath: '/custom-auth/**' }, '/custom-auth', true],
 		[{ handlerPath: '/**' }, '/', true],
 	] as const)('registers the base path from %j', async (betterAuth, mountPath, legacy) => {
-		const warning = vi.spyOn(console, 'warn').mockImplementation(() => {})
+		const warning = vi.fn()
 		rootDir = await mkdtemp(join(tmpdir(), 'nitro-better-auth-'))
 		const optionsDir = join(rootDir, 'better-auth')
 		await mkdir(optionsDir)
@@ -58,6 +58,7 @@ describe('nitro better Auth module', () => {
 						closeHooks.push(callback)
 				},
 			},
+			logger: { warn: warning },
 			close: async () => {
 				await Promise.all(closeHooks.map(callback => callback()))
 			},
@@ -66,7 +67,6 @@ describe('nitro better Auth module', () => {
 		expect(warning).toHaveBeenCalledTimes(legacy ? 1 : 0)
 		if (legacy)
 			expect(warning).toHaveBeenCalledWith(expect.stringContaining(`mountPath: '${mountPath}'`))
-		warning.mockRestore()
 
 		expect(nitro.options.handlers).toContainEqual(expect.objectContaining({
 			route: mountPath === '/' ? '/**' : `${mountPath}/**`,

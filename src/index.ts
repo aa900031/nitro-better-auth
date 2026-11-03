@@ -124,7 +124,7 @@ function resolveOptions(
 			)
 		}
 		rawOptions.mountPath = handlerPath.slice(0, -3) || '/'
-		console.warn(`[nitro-better-auth] handlerPath is deprecated. Replace it with mountPath: '${rawOptions.mountPath}'.`)
+		nitro.logger.warn(`[nitro-better-auth] handlerPath is deprecated. Replace it with mountPath: '${rawOptions.mountPath}'.`)
 	}
 	const resolvedOptions = defu(rawOptions, DEFAULT_OPTIONS)
 	resolvedOptions.mountPath = joinURL('/', cleanDoubleSlashes(resolvedOptions.mountPath))

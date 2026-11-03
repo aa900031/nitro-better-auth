@@ -7,6 +7,7 @@ import { env } from 'std-env'
 import { joinURL, withoutTrailingSlash } from 'ufo'
 import serverOptionsContextConfig from '#nitro-better-auth/server-options-context.mjs'
 import loadServerOptions from '#nitro-better-auth/server-options.mjs'
+import { warnOnce } from './logger'
 
 export interface ServerOptionsContextConfig {
 	dev: boolean
@@ -182,8 +183,8 @@ function warnPath(
 	source: string,
 ): void {
 	if (path !== undefined && withoutTrailingSlash(path) !== withoutTrailingSlash(registeredPath)) {
-		console.warn(
-			`[nitro-better-auth] ${source} path "${path}" does not match the registered route "${registeredPath}".`,
+		warnOnce(
+			`${source} path "${path}" does not match the registered route "${registeredPath}".`,
 		)
 	}
 }
