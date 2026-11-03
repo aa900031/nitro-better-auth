@@ -34,6 +34,11 @@ export function resolveBetterAuthOptions<T extends BetterAuthOptions>(
 		options.baseURL = serverOptionsContext.baseURL
 	else if (typeof options.baseURL === 'object' && options.baseURL.fallback === undefined && serverOptionsContext.baseURL !== undefined)
 		options.baseURL = { ...options.baseURL, fallback: serverOptionsContext.baseURL }
+	if (options.secret === undefined && options.secrets === undefined) {
+		const secret = resolveRuntimeSecret(runtimeConfig)
+		if (secret !== undefined)
+			options.secret = secret
+	}
 
 	warnPathMismatch(serverOptionsContext.basePath, options)
 	return options as T
@@ -181,4 +186,11 @@ function warnURLPath(
 		warnPath(registeredPath, path === '/' ? basePath : path, source)
 	}
 	catch {}
+}
+
+function resolveRuntimeSecret(
+	runtimeConfig: NitroRuntimeConfig,
+): string | undefined {
+	const secret = runtimeConfig.betterAuth?.secret
+	return typeof secret === 'string' && secret ? secret : undefined
 }

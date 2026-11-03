@@ -48,11 +48,16 @@ function resolveOptions(
 	return resolveBetterAuthOptions(runtimeConfig, event)
 }
 
-function createRuntimeConfig(baseURL = '/', siteUrl?: string): NitroRuntimeConfig {
+function createRuntimeConfig(
+	baseURL = '/',
+	siteUrl?: string,
+	secret?: string,
+): NitroRuntimeConfig {
 	return {
 		app: { baseURL },
 		nitro: {},
 		public: { siteUrl },
+		betterAuth: secret === undefined ? undefined : { secret },
 	}
 }
 
@@ -254,6 +259,47 @@ describe('better Auth option candidates', () => {
 		}
 		expect(resolveOptions(config, runtimeConfig, () => ({ baseURL: explicitDynamicBaseURL })).baseURL)
 			.toBe(explicitDynamicBaseURL)
+	})
+
+	it('uses the private runtime secret when the factory does not configure secrets', () => {
+		const runtimeConfig = createRuntimeConfig('/', undefined, 'runtime-secret')
+
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			runtimeConfig,
+			() => ({}),
+		)).toEqual({
+			basePath: '/api/auth',
+			secret: 'runtime-secret',
+		})
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			runtimeConfig,
+			() => ({ secret: undefined }),
+		).secret).toBe('runtime-secret')
+	})
+
+	it('gives factory secrets precedence over the private runtime secret', () => {
+		const runtimeConfig = createRuntimeConfig('/', undefined, 'runtime-secret')
+		const secrets = [{ version: 2, value: 'factory-secret' }]
+
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			runtimeConfig,
+			() => ({ secret: 'factory-secret' }),
+		).secret).toBe('factory-secret')
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			runtimeConfig,
+			() => ({ secrets }),
+		).secrets).toBe(secrets)
+	})
+
+	it('ignores an absent or empty private runtime secret', () => {
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			createRuntimeConfig('/', undefined, ''),
+		).secret).toBeUndefined()
 	})
 
 	it('warns on every explicit path mismatch', () => {
