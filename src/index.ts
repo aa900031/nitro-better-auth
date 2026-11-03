@@ -34,6 +34,12 @@ export default defineNitroModule({
 		const options = resolveOptions(nitro)
 		const resolver = createResolver(import.meta.url)
 
+		nitro.options.runtimeConfig ??= {} as typeof nitro.options.runtimeConfig
+		nitro.options.runtimeConfig.betterAuth = defu(
+			nitro.options.runtimeConfig.betterAuth,
+			{ baseURL: '', basePath: '', secret: '' },
+		)
+
 		nitro.options.externals ??= {} as any
 		nitro.options.externals.inline ??= []
 		nitro.options.externals.inline.push(
@@ -131,5 +137,15 @@ declare module 'nitropack' {
 	}
 	interface NitroConfig {
 		betterAuth?: ModuleOptions
+	}
+}
+
+declare module 'nitropack/types' {
+	interface NitroRuntimeConfig {
+		betterAuth?: {
+			baseURL?: string
+			basePath?: string
+			secret?: string
+		}
 	}
 }

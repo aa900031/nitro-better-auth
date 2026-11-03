@@ -48,11 +48,16 @@ function resolveOptions(
 	return resolveBetterAuthOptions(runtimeConfig, event)
 }
 
-function createRuntimeConfig(baseURL = '/', siteUrl?: string): NitroRuntimeConfig {
+function createRuntimeConfig(
+	baseURL = '/',
+	siteUrl?: string,
+	betterAuth?: NitroRuntimeConfig['betterAuth'],
+): NitroRuntimeConfig {
 	return {
 		app: { baseURL },
 		nitro: {},
 		public: { siteUrl },
+		betterAuth,
 	}
 }
 
@@ -98,6 +103,15 @@ describe('better Auth option candidates', () => {
 		)).toEqual({
 			basePath: '/api/auth',
 		})
+	})
+
+	it('ignores an empty BETTER_AUTH_URL when inferring baseURL', () => {
+		vi.stubEnv('BETTER_AUTH_URL', '')
+
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			createRuntimeConfig('/', 'https://site.example.com'),
+		).baseURL).toBe('https://site.example.com')
 	})
 
 	it('prefers the site URL origin and skips an invalid site URL', () => {
@@ -254,6 +268,115 @@ describe('better Auth option candidates', () => {
 		}
 		expect(resolveOptions(config, runtimeConfig, () => ({ baseURL: explicitDynamicBaseURL })).baseURL)
 			.toBe(explicitDynamicBaseURL)
+	})
+
+	it('uses the private runtime secret when the factory does not configure secrets', () => {
+		const runtimeConfig = createRuntimeConfig('/', undefined, { secret: 'runtime-secret' })
+
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			runtimeConfig,
+			() => ({}),
+		)).toEqual({
+			basePath: '/api/auth',
+			secret: 'runtime-secret',
+		})
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			runtimeConfig,
+			() => ({ secret: undefined }),
+		).secret).toBe('runtime-secret')
+	})
+
+	it('gives factory secrets precedence over the private runtime secret', () => {
+		const runtimeConfig = createRuntimeConfig('/', undefined, { secret: 'runtime-secret' })
+		const secrets = [{ version: 2, value: 'factory-secret' }]
+
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			runtimeConfig,
+			() => ({ secret: 'factory-secret' }),
+		).secret).toBe('factory-secret')
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			runtimeConfig,
+			() => ({ secrets }),
+		).secrets).toBe(secrets)
+	})
+
+	it('ignores an absent or empty private runtime secret', () => {
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			createRuntimeConfig('/', undefined, { secret: '' }),
+		).secret).toBeUndefined()
+	})
+
+	it('uses private runtime baseURL and basePath before inferred values', () => {
+		vi.spyOn(console, 'warn').mockImplementation(() => {})
+		vi.stubEnv('BETTER_AUTH_URL', 'https://env.example.com/api/auth')
+
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			createRuntimeConfig('/', 'https://site.example.com', {
+				basePath: '/runtime/auth',
+				baseURL: 'https://runtime.example.com/runtime/auth',
+			}),
+			() => ({}),
+		)).toEqual({
+			basePath: '/runtime/auth',
+			baseURL: 'https://runtime.example.com/runtime/auth',
+		})
+	})
+
+	it('gives factory baseURL and basePath precedence over private runtime values', () => {
+		vi.spyOn(console, 'warn').mockImplementation(() => {})
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			createRuntimeConfig('/', undefined, {
+				basePath: '/runtime/auth',
+				baseURL: 'https://runtime.example.com/runtime/auth',
+			}),
+			() => ({
+				basePath: '/factory/auth',
+				baseURL: 'https://factory.example.com/factory/auth',
+			}),
+		)).toEqual({
+			basePath: '/factory/auth',
+			baseURL: 'https://factory.example.com/factory/auth',
+		})
+	})
+
+	it('falls back to the registered runtime base path when no private path is configured', () => {
+		expect(resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			createRuntimeConfig('/shop/', undefined, { baseURL: '' }),
+		).basePath).toBe('/shop/api/auth')
+	})
+
+	it('warns when a private runtime basePath does not match the registered route', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+		resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			createRuntimeConfig('/', undefined, { basePath: '/runtime/auth' }),
+		)
+
+		expect(warn).toHaveBeenCalledTimes(1)
+	})
+
+	it('warns only for basePath when an origin-only baseURL accompanies a mismatch', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+		resolveOptions(
+			{ mountPath: '/api/auth', dev: false },
+			createRuntimeConfig('/', undefined, {
+				basePath: '/runtime/auth',
+				baseURL: 'https://x.example.com',
+			}),
+		)
+
+		expect(warn).toHaveBeenCalledTimes(1)
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('basePath'))
 	})
 
 	it('warns on every explicit path mismatch', () => {

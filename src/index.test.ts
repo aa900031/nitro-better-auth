@@ -42,6 +42,7 @@ describe('nitro better Auth module', () => {
 				buildDir: join(rootDir, '.nitro'),
 				dev: false,
 				betterAuth,
+				runtimeConfig: { betterAuth: { secret: 'configured' } },
 				experimental: {},
 				externals: { inline: [] },
 				handlers: [],
@@ -70,6 +71,11 @@ describe('nitro better Auth module', () => {
 		expect(nitro.options.handlers).toContainEqual(expect.objectContaining({
 			route: mountPath === '/' ? '/**' : `${mountPath}/**`,
 		}))
+		expect(nitro.options.runtimeConfig.betterAuth).toEqual({
+			baseURL: '',
+			basePath: '',
+			secret: 'configured',
+		})
 		const virtualModule = nitro.options.virtual['#nitro-better-auth/server-options.mjs']
 		expect(virtualModule).toBeTypeOf('function')
 		expect(await (virtualModule as () => Promise<string>)()).not.toContain('moduleOptions')
