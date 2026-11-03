@@ -19,6 +19,10 @@
 		".": {
 			"types": "./dist/index.d.mts",
 			"import": "./dist/index.mjs"
+		},
+		"./config": {
+			"types": "./dist/config.d.mts",
+			"import": "./dist/config.mjs"
 		}
 	},
 	"main": "./dist/index.mjs",
@@ -26,6 +30,9 @@
 		"*": {
 			".": [
 				"./dist/index.d.mts"
+			],
+			"config": [
+				"./dist/config.d.mts"
 			]
 		}
 	},
@@ -48,7 +55,9 @@
 		"defu": "^6.1.4",
 		"knitwork": "^1.2.0",
 		"nitropack": "^2.11.13",
-		"pathe": "^2.0.3"
+		"pathe": "^2.0.3",
+		"std-env": "^4.3.0",
+		"ufo": "^1.6.4"
 	},
 	"peerDependenciesMeta": {
 		"chokidar": {
@@ -61,6 +70,12 @@
 			"optional": true
 		},
 		"pathe": {
+			"optional": true
+		},
+		"std-env": {
+			"optional": true
+		},
+		"ufo": {
 			"optional": true
 		}
 	},
@@ -79,8 +94,10 @@
 		"npm-run-all2": "^9.0.4",
 		"pathe": "^2.0.3",
 		"release-it": "^20.2.1",
+		"std-env": "^4.3.0",
 		"tsdown": "^0.23.3",
 		"typescript": "~5.9.3",
+		"ufo": "^1.6.4",
 		"vite": "^8.3.5",
 		"vitest": "^5.0.5",
 		"wait-on": "^9.5.1"

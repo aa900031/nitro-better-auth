@@ -1,4 +1,5 @@
 import type { Nitro } from 'nitropack/types'
+import type { ResolvedMoudleOptions } from '..'
 import * as fsp from 'node:fs/promises'
 import { watch as watchDir } from 'chokidar'
 import { genImport } from 'knitwork'
@@ -7,12 +8,12 @@ import { addTypeFile, addVirtualFile, resolvePath } from '../utils/nitro'
 
 export async function addUserConfig(
 	nitro: Nitro,
-	src: string,
+	options: ResolvedMoudleOptions,
 ): Promise<void> {
 	addVirtualFile(nitro, {
 		alias: '#nitro-better-auth/server-options.mjs',
 		getContent: async () => {
-			const srcFilepath = await resolvePath(nitro, src, {
+			const srcFilepath = await resolvePath(nitro, options.options.path, {
 				cwd: nitro.options.srcDir,
 			})
 			return await genContent(srcFilepath)
@@ -27,13 +28,13 @@ export async function addUserConfig(
 	await writeFile(nitro, {
 		dist: distTypePath,
 		getContent: async () => {
-			const srcFilepath = await resolvePath(nitro, src, {
+			const srcFilepath = await resolvePath(nitro, options.options.path, {
 				cwd: nitro.options.srcDir,
 			})
 			return await genType(srcFilepath, distTypePath)
 		},
 		dependences: [
-			resolve(nitro.options.srcDir, src),
+			resolve(nitro.options.srcDir, options.options.path),
 		],
 	})
 }
