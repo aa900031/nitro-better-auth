@@ -16,10 +16,10 @@ export interface ServerOptionsContextConfig {
 
 export function resolveBetterAuthOptions<T extends BetterAuthOptions>(
 	runtimeConfig: NitroRuntimeConfig,
-	event?: H3Event,
+	event: H3Event | undefined,
 ): T {
 	const { basePath, registeredBasePath } = resolveBasePath(runtimeConfig)
-	const baseURL = resolveBaseURL(runtimeConfig, event)
+	const { baseURL } = resolveBaseURL(runtimeConfig, event)
 	const serverOptionsContext: ServerOptionsContext = {
 		basePath,
 		...(baseURL === undefined ? {} : { baseURL }),
@@ -55,63 +55,103 @@ function resolveBasePath(
 	}
 }
 
-function resolveBaseURL(
+export type BaseURLSource
+	/** `runtimeConfig.betterAuth.baseURL` */
+	= | 'runtime-config'
+		/** The `BETTER_AUTH_URL` environment variable, read by better-auth itself. */
+		| 'better-auth-env'
+		/** `runtimeConfig.public.siteUrl` */
+		| 'site-url'
+		/** The origin of the current request (development only). */
+		| 'request-origin'
+		/** The Nitro listener origin, including the Nuxt development proxy (development only). */
+		| 'nitro-origin'
+		/** The `VERCEL_URL` environment variable. */
+		| 'vercel-env'
+		/** The `CF_PAGES_URL` environment variable. */
+		| 'cf-pages-env'
+		/** The `URL` environment variable. */
+		| 'url-env'
+		/** `http://localhost:3000` (development only). */
+		| 'dev-fallback'
+		/** Nothing is available; better-auth receives no baseURL. */
+		| 'none'
+
+export interface ResolvedBaseURL {
+	baseURL: string | undefined
+	source: BaseURLSource
+}
+
+/** True when the source is inferred from the surroundings rather than explicitly configured. */
+export function isInferredSource(source: BaseURLSource): boolean {
+	switch (source) {
+		case 'runtime-config':
+		case 'better-auth-env':
+		case 'site-url':
+			return false
+		default:
+			return true
+	}
+}
+
+export function resolveBaseURL(
 	runtimeConfig: NitroRuntimeConfig,
 	event?: H3Event,
-): string | undefined {
+): ResolvedBaseURL {
+	const dev = serverOptionsContextConfig.dev
+
 	const baseURL = runtimeConfig.betterAuth?.baseURL
 	if (typeof baseURL === 'string' && baseURL)
-		return baseURL
+		return { baseURL, source: 'runtime-config' }
 
 	if (env.BETTER_AUTH_URL)
-		return
+		return { baseURL: undefined, source: 'better-auth-env' }
 
 	const siteUrl = runtimeConfig.public?.siteUrl
 	if (typeof siteUrl === 'string') {
-		const configuredOrigin = validateURL(siteUrl, serverOptionsContextConfig.dev)
+		const configuredOrigin = validateURL(siteUrl, dev)
 		if (configuredOrigin !== undefined)
-			return configuredOrigin
+			return { baseURL: configuredOrigin, source: 'site-url' }
 	}
 
-	if (serverOptionsContextConfig.dev) {
-		const eventOrigin = resolveEventOrigin(event)
-		if (eventOrigin !== undefined)
-			return validateURL(eventOrigin, serverOptionsContextConfig.dev)
+	if (dev && event !== undefined) {
+		try {
+			const requestOrigin = getRequestURL(event, {
+				xForwardedHost: true,
+				xForwardedProto: true,
+			}).origin
+			return { baseURL: validateURL(requestOrigin, dev), source: 'request-origin' }
+		}
+		catch {}
 	}
 
-	const environmentOrigin = resolveEnvironmentOrigin(serverOptionsContextConfig.dev)
-	if (environmentOrigin !== undefined)
-		return environmentOrigin
-
-	if (serverOptionsContextConfig.dev)
-		return 'http://localhost:3000'
-}
-
-function resolveEventOrigin(event?: H3Event): string | undefined {
-	if (event === undefined)
-		return
-	try {
-		return getRequestURL(event, {
-			xForwardedHost: true,
-			xForwardedProto: true,
-		}).origin
-	}
-	catch {}
-}
-
-function resolveEnvironmentOrigin(dev: boolean): string | undefined {
 	const nitroOrigin = dev ? getNitroOrigin() : undefined
-	if (nitroOrigin)
-		return validateURL(nitroOrigin, dev)
+	if (nitroOrigin) {
+		const baseURL = validateURL(nitroOrigin, dev)
+		if (baseURL)
+			return { baseURL, source: 'nitro-origin' }
+	}
+	if (env.VERCEL_URL) {
+		const baseURL = validateURL(`https://${env.VERCEL_URL}`, dev)
+		if (baseURL) {
+			return { baseURL, source: 'vercel-env' }
+		}
+	}
+	if (env.CF_PAGES_URL) {
+		const baseURL = validateURL(env.CF_PAGES_URL, dev)
+		if (baseURL)
+			return { baseURL, source: 'cf-pages-env' }
+	}
+	if (env.URL) {
+		const baseURL = validateURL(env.URL.startsWith('http') ? env.URL : `https://${env.URL}`, dev)
+		if (baseURL)
+			return { baseURL, source: 'url-env' }
+	}
 
-	if (env.VERCEL_URL)
-		return validateURL(`https://${env.VERCEL_URL}`, dev)
+	if (dev)
+		return { baseURL: 'http://localhost:3000', source: 'dev-fallback' }
 
-	if (env.CF_PAGES_URL)
-		return validateURL(env.CF_PAGES_URL, dev)
-
-	if (env.URL)
-		return validateURL(env.URL.startsWith('http') ? env.URL : `https://${env.URL}`, dev)
+	return { baseURL: undefined, source: 'none' }
 }
 
 /** Adapted from nuxt-site-config via @nuxtjs/better-auth. */
