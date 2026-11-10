@@ -37,46 +37,17 @@ export default defineNitroConfig({
 
 The former `handlerPath` option is deprecated. A static path ending in `/**`, such as `/api/auth/**`, is migrated to `mountPath: '/api/auth'` with a warning. Other route patterns and configurations that set both options fail at startup; update those configurations to use `mountPath`.
 
-> [!TIP]
-> When you are using Postgresql as database with Hyperdrive in Cloudflare Worker, you should setup server singleton by request.
-
-```typescript [nitro.config.ts]
-export default defineNitroConfig({
-	modules: ['nuxt-better-auth'],
-	// Setup server singleton by request
-	betterAuth: {
-		singleton: 'request',
-	},
-	// [Optional] Enable async context: https://nitro.build/guide/utils#async-context-experimental
-	experimental: {
-		asyncContext: true,
-	},
-})
-```
+> [!WARNING]
+> On Cloudflare Workers, TCP database connections (for example a Hyperdrive `postgres` client) are scoped to a single request and cannot be reused by the shared Better Auth instance. Use an HTTP-based driver (D1, Neon HTTP, PlanetScale fetch, …) instead.
 
 ## Usage
 
-You can easily get betterAuth instance through `useBetterAuth` in the `eventHandler`.
+Get the Better Auth instance through `useBetterAuth`. Instances are cached by the resolved `baseURL`: in production that resolution never depends on the request, so every handler and task shares one instance; in development each inferred request origin gets its own.
+
+Pass the `event` inside an `eventHandler` so development requests can infer the origin. With [`experimental.asyncContext`](https://nitro.build/guide/utils#async-context-experimental) enabled, the event is picked up automatically and the argument can be omitted.
 
 ```typescript
-export default eventHandler(async () => {
-	const betterAuth = useBetterAuth()
-
-	// Do something with betterAuth
-	// e.g: call login with anonymous
-	const resp = await betterAuth.api.signInAnonymous()
-
-	return {
-		success: true,
-		data: resp,
-	}
-})
-```
-
-If use singleton for request, please put `event` to `useBetterAuth`, or used `asyncContext` first then you don't need that anymore.
-
-```typescript
-export default eventHandler(async () => {
+export default eventHandler(async (event) => {
 	const betterAuth = useBetterAuth(event)
 
 	// Do something with betterAuth
@@ -89,6 +60,8 @@ export default eventHandler(async () => {
 	}
 })
 ```
+
+Outside of a request — in a task, a Nitro plugin, or a queue consumer — call `useBetterAuth()` without an event. The resolution then relies on configuration and platform environment only; in development, a one-time warning reminds you when it had to fall back to an inferred origin.
 
 ## Custom options
 
