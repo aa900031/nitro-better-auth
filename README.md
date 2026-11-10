@@ -38,7 +38,7 @@ export default defineNitroConfig({
 The former `handlerPath` option is deprecated. A static path ending in `/**`, such as `/api/auth/**`, is migrated to `mountPath: '/api/auth'` with a warning. Other route patterns and configurations that set both options fail at startup; update those configurations to use `mountPath`.
 
 > [!WARNING]
-> On Cloudflare Workers, TCP database connections (for example a Hyperdrive `postgres` client) are scoped to a single request and cannot be reused by the shared Better Auth instance. Use an HTTP-based driver (D1, Neon HTTP, PlanetScale fetch, …) instead.
+> On Cloudflare Workers, TCP database connections (for example a Hyperdrive `postgres` client) are [scoped to a single request](https://developers.cloudflare.com/hyperdrive/concepts/connection-lifecycle/) and cannot be reused by the shared Better Auth instance. Use an HTTP-based driver (D1, Neon HTTP, PlanetScale fetch, …) instead, or manage a per-request client yourself.
 
 ## Usage
 
