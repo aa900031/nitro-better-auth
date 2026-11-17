@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 
+## v0.4.0
+
+[compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.3.1...v0.4.0)
+
+### 🚀 Enhancements
+
+-  ⚠️ Cache instance per site url (#58) ([1b44f6a](https://github.com/aa900031/nitro-better-auth/commit/1b44f6aa9e1a3cf34c16a623976a1b21a2526a55))
+-  Infer base url (#53) ([52910e4](https://github.com/aa900031/nitro-better-auth/commit/52910e4433620387d4b77e6326c34e6ecc066900))
+-  Infer secret (#54) ([11f0c20](https://github.com/aa900031/nitro-better-auth/commit/11f0c20d91a29c235c7e88c25632b51bdc48cab7))
+
+### 🩹 Fixes
+
+-  **playground:** Pass headers and through response ([ee2eb41](https://github.com/aa900031/nitro-better-auth/commit/ee2eb41002bf499e6b95791ca5c0cde8a701923b))
+-  Warn once per distinct path mismatch ([86d1fec](https://github.com/aa900031/nitro-better-auth/commit/86d1fec9259a725074f7bda52ac0fcc26af7f257))
+
+### 🏡 Chore
+
+-  **ci:** Add typecheck ([01f4d53](https://github.com/aa900031/nitro-better-auth/commit/01f4d53cecfefa85e48f824524ef4f259a2a32cc))
+-  **deps:** Replace dependency @tsconfig/node22 with @tsconfig/node24 (#42) ([a58a657](https://github.com/aa900031/nitro-better-auth/commit/a58a65751eee38411ada2091610adda80c74a634))
+-  **deps:** Update dependency better-auth to ^1.7.12 (#49) ([26bb942](https://github.com/aa900031/nitro-better-auth/commit/26bb942a0b85d94fdcd5acca853afc122ad2e917))
+-  **deps:** Update dev deps ([a9f89fa](https://github.com/aa900031/nitro-better-auth/commit/a9f89fa584cd326c883eb20f4d801773b9a9f0bc))
+-  **deps:** Update devdependency better-auth to ^1.7.14 (#52) ([05dbfb7](https://github.com/aa900031/nitro-better-auth/commit/05dbfb7fcec6220d5198d36ffd82898b72c03740))
+-  **deps:** Update github actions ([2225fec](https://github.com/aa900031/nitro-better-auth/commit/2225fec5e0fad882c500c8ebba7a995232a43b21))
+-  **deps:** Update node version ([7a1baff](https://github.com/aa900031/nitro-better-auth/commit/7a1bafff34c18b450f3d1744c9ad4472e4588ebc))
+-  **deps:** Update node.js to v24.22.1 (#40) ([8e8e82f](https://github.com/aa900031/nitro-better-auth/commit/8e8e82f33c92c04cd68293e898c655737a203a39))
+-  **deps:** Update node.js to v24.22.2 (#47) ([e436a75](https://github.com/aa900031/nitro-better-auth/commit/e436a755830ea1c93932a60e83ded842c95430b0))
+-  **deps:** Update node.js to v24.22.3 (#61) ([22b446b](https://github.com/aa900031/nitro-better-auth/commit/22b446b59715dffd4f726fbf2918b2da8fdcefa0))
+-  **deps:** Update npm non-major dependencies (#51) ([873b8fb](https://github.com/aa900031/nitro-better-auth/commit/873b8fbbc3a2df8bc73c7956f65e01c2f6308460))
+-  **deps:** Update npm non-major develop dependencies (#50) ([7efb3cd](https://github.com/aa900031/nitro-better-auth/commit/7efb3cd5c1521cf1889f4b683f63ebcf782bad80))
+-  **deps:** Update npm non-major develop dependencies (#55) ([343cd83](https://github.com/aa900031/nitro-better-auth/commit/343cd83f5da1eeeee71c9ecef242572f3756af84))
+-  **deps:** Update npm non-major develop dependencies (#57) ([79a5839](https://github.com/aa900031/nitro-better-auth/commit/79a583924316d1be0883dfb77451bcb589cd6408))
+-  **deps:** Update npm non-major develop dependencies (#60) ([3a6dae0](https://github.com/aa900031/nitro-better-auth/commit/3a6dae0d54c322bfbb599e322391410738d8fba7))
+-  **deps:** Update pnpm to v11.28.11 (#56) ([389ab4c](https://github.com/aa900031/nitro-better-auth/commit/389ab4c821722e5fc5268a11403cc152dfdb9fc0))
+-  **deps:** Update pnpm to v11.28.9 (#35) ([4beb4df](https://github.com/aa900031/nitro-better-auth/commit/4beb4dfc5a3b9f289c0c0eed8e21db9bfbb9a273))
+-  **deps:** Update vitest (#48) ([e252e12](https://github.com/aa900031/nitro-better-auth/commit/e252e12765d9cfcc20bcdbe53c0661973b03d873))
+
+
+### ⚠️ Breaking Changes
+
+-  cache instance per site url (#58) ([1b44f6a](https://github.com/aa900031/nitro-better-auth/commit/1b44f6aa9e1a3cf34c16a623976a1b21a2526a55))
+
+#### ❤️ Contributors
+
+- Renovate[bot] 
+- Zhong666 <aa900031@gmail.com>
+
 ## v0.3.1
 
 [compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.3.0...v0.3.1)
