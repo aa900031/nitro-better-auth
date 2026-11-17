@@ -9,7 +9,6 @@ import { addAuthHandler } from './utils/auth-handler'
 import { addImports, addPlugin, addTypeReference, createResolver } from './utils/nitro'
 
 export interface ModuleOptions {
-	singleton?: 'app' | 'request'
 	mountPath?: string
 	/** @deprecated Use mountPath instead. */
 	handlerPath?: string
@@ -21,7 +20,6 @@ export interface ModuleOptions {
 export type ResolvedMoudleOptions = Defu<Omit<ModuleOptions, 'handlerPath'>, [typeof DEFAULT_OPTIONS]>
 
 const DEFAULT_OPTIONS = {
-	singleton: 'app',
 	options: {
 		path: 'better-auth/server-options',
 	},
@@ -51,46 +49,21 @@ export default defineNitroModule({
 			'nitro-better-auth',
 		)
 
-		switch (options.singleton) {
-			case 'request':
-				addPlugin(
-					nitro,
-					resolver.resolve('./runtime/plugins/auth-request'),
-				)
-				if (nitro.options.experimental.asyncContext === true) {
-					addImports(
-						nitro,
-						[{
-							name: 'useBetterAuth',
-							from: resolver.resolve('./runtime/utils/better-auth-request'),
-						}],
-					)
-				}
-				else {
-					addImports(
-						nitro,
-						[{
-							name: 'useBetterAuth',
-							from: resolver.resolve('./runtime/utils/better-auth-request-event'),
-						}],
-					)
-				}
-				break
-			case 'app':
-			default:
-				addPlugin(
-					nitro,
-					resolver.resolve('./runtime/plugins/auth'),
-				)
-				addImports(
-					nitro,
-					[{
-						name: 'useBetterAuth',
-						from: resolver.resolve('./runtime/utils/better-auth'),
-					}],
-				)
-				break
-		}
+		addPlugin(
+			nitro,
+			resolver.resolve('./runtime/plugins/auth'),
+		)
+		addImports(
+			nitro,
+			[{
+				name: 'useBetterAuth',
+				from: resolver.resolve(
+					nitro.options.experimental.asyncContext === true
+						? './runtime/utils/better-auth-async-context'
+						: './runtime/utils/better-auth',
+				),
+			}],
+		)
 		addImports(
 			nitro,
 			[{

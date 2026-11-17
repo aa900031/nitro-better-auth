@@ -10,6 +10,6 @@ export type AuthOptionsFactory<T extends BetterAuthOptions | undefined = BetterA
 
 export function defineAuthOptions<const T extends BetterAuthOptions | undefined>(
 	factory: AuthOptionsFactory<T>,
-): AuthOptionsFactory<T> {
+): typeof factory {
 	return factory
 }
