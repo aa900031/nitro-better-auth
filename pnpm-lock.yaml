@@ -75,7 +75,7 @@ importers:
   playground:
     dependencies:
       better-auth:
-        specifier: ^1.7.19
+        specifier: ^1.7.20
         version: 1.7.22(vitest@5.1.0)
       nitro-better-auth:
         specifier: workspace:*
