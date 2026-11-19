@@ -82,10 +82,10 @@
 	"devDependencies": {
 		"@aa900031/eslint-config": "^8.0.4",
 		"@aa900031/release-it-config": "^1.0.0",
-		"@tsconfig/node24": "^24.0.5",
+		"@tsconfig/node24": "^24.0.6",
 		"@types/node": "^26.6.6",
 		"@vitest/coverage-istanbul": "^5.1.0",
-		"better-auth": "^1.7.20",
+		"better-auth": "^1.7.22",
 		"chokidar": "^5.0.0",
 		"defu": "^6.1.7",
 		"eslint": "^10.14.0",
