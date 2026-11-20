@@ -88,7 +88,7 @@ function resolveOptions(
 	const { handlerPath, ...rawOptions } = nitro.options.betterAuth ?? {}
 	if (handlerPath !== undefined) {
 		if (rawOptions.mountPath !== undefined) {
-			throw diagnostics.NITRO_BETTER_AUTH_C0001()
+			throw diagnostics.NITRO_BETTER_AUTH_C0001({ mountPath: rawOptions.mountPath, handlerPath })
 		}
 		if (typeof handlerPath !== 'string' || !/^\/(?:[^/*:?]+\/)*\*\*$/.test(handlerPath)) {
 			throw diagnostics.NITRO_BETTER_AUTH_C0002({ handlerPath })

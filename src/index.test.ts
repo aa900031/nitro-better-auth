@@ -20,6 +20,7 @@ describe('nitro better Auth module', () => {
 	let rootDir: string | undefined
 
 	afterEach(async () => {
+		vi.restoreAllMocks()
 		await nitro?.close()
 		if (rootDir !== undefined)
 			await rm(rootDir, { recursive: true, force: true })
