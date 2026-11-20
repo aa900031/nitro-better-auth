@@ -3,6 +3,7 @@ import type { Nitro } from 'nitropack'
 import defu from 'defu'
 import { defineNitroModule } from 'nitropack/kit'
 import { cleanDoubleSlashes, joinURL } from 'ufo'
+import { diagnostics } from './diagnostics'
 import { addServerOptionsContext } from './template/server-options-context'
 import { addUserConfig } from './template/user-options'
 import { addAuthHandler } from './utils/auth-handler'
@@ -87,14 +88,10 @@ function resolveOptions(
 	const { handlerPath, ...rawOptions } = nitro.options.betterAuth ?? {}
 	if (handlerPath !== undefined) {
 		if (rawOptions.mountPath !== undefined) {
-			throw new Error(
-				'[nitro-better-auth] Configure either mountPath or the deprecated handlerPath, not both. Remove handlerPath.',
-			)
+			throw diagnostics.NITRO_BETTER_AUTH_C0001({ mountPath: rawOptions.mountPath, handlerPath })
 		}
 		if (typeof handlerPath !== 'string' || !/^\/(?:[^/*:?]+\/)*\*\*$/.test(handlerPath)) {
-			throw new Error(
-				'[nitro-better-auth] Cannot migrate handlerPath. Use a static path ending in /**, or replace it with mountPath manually.',
-			)
+			throw diagnostics.NITRO_BETTER_AUTH_C0002({ handlerPath })
 		}
 		rawOptions.mountPath = handlerPath.slice(0, -3) || '/'
 		nitro.logger.warn(`[nitro-better-auth] handlerPath is deprecated. Replace it with mountPath: '${rawOptions.mountPath}'.`)

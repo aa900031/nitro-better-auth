@@ -3,6 +3,7 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { diagnostics } from './diagnostics'
 import nitroBetterAuth from './index'
 
 vi.mock('chokidar', () => ({
@@ -19,9 +20,12 @@ describe('nitro better Auth module', () => {
 	let rootDir: string | undefined
 
 	afterEach(async () => {
+		vi.restoreAllMocks()
 		await nitro?.close()
 		if (rootDir !== undefined)
 			await rm(rootDir, { recursive: true, force: true })
+		nitro = undefined
+		rootDir = undefined
 	})
 
 	it.each([
@@ -87,11 +91,15 @@ describe('nitro better Auth module', () => {
 	})
 
 	it.each([
-		[{ handlerPath: '/custom-auth' }, 'Cannot migrate handlerPath'],
-		[{ handlerPath: '/custom/*' }, 'Cannot migrate handlerPath'],
-		[{ handlerPath: '/custom-auth/**', mountPath: '/other' }, 'Configure either mountPath'],
-	] as const)('rejects unsupported legacy configuration %j', async (betterAuth, message) => {
+		[{ handlerPath: '/custom-auth' }, diagnostics.NITRO_BETTER_AUTH_C0002],
+		[{ handlerPath: '/custom/*' }, diagnostics.NITRO_BETTER_AUTH_C0002],
+		[{ handlerPath: ['/custom-auth/**'] }, diagnostics.NITRO_BETTER_AUTH_C0002],
+		[{ handlerPath: '/custom-auth/**', mountPath: '/other' }, diagnostics.NITRO_BETTER_AUTH_C0001],
+	] as const)('rejects unsupported legacy configuration %j', async (betterAuth, diagnostic) => {
+		const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
 		const nitro = { options: { betterAuth } } as unknown as Nitro
-		await expect(nitroBetterAuth.setup(nitro)).rejects.toThrow(message)
+		await expect(nitroBetterAuth.setup(nitro)).rejects.toSatisfy(diagnostic.is)
+		// The thrown message carries only `why`; the reporter is the one place `fix` reaches the user.
+		expect(consoleError).toHaveBeenCalledWith(expect.stringContaining('fix:'))
 	})
 })
