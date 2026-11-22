@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 
+## v0.5.0
+
+[compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.4.0...v0.5.0)
+
+### 🚀 Enhancements
+
+-  Add diagnostics (#67) ([70578d9](https://github.com/aa900031/nitro-better-auth/commit/70578d95c173664187f5dcaca992c6cc276cf968))
+
+### 🏡 Chore
+
+-  **deps:** Update dependency better-auth to ^1.7.20 (#63) ([b0d42cf](https://github.com/aa900031/nitro-better-auth/commit/b0d42cf0d2b722fde1ab39aa8ddeff3212f5b0aa))
+-  **deps:** Update dependency better-auth to ^1.7.22 (#65) ([10c4b8b](https://github.com/aa900031/nitro-better-auth/commit/10c4b8b9b11781b0756edb83eb93c9ad3936a388))
+-  **deps:** Update dependency better-auth to ^1.7.24 (#68) ([565df6c](https://github.com/aa900031/nitro-better-auth/commit/565df6c9aa627d692451a6541c3e5d81a77f8e3f))
+-  **deps:** Update devdependency better-auth to ^1.7.20 (#62) ([afe2d77](https://github.com/aa900031/nitro-better-auth/commit/afe2d773298f26dc02c23f4c1985aad5733773b5))
+-  **deps:** Update devdependency vite to ^8.3.8 (#64) ([b4850fa](https://github.com/aa900031/nitro-better-auth/commit/b4850fab59c3e6a6f468c8f35e9095fe17fc50f0))
+-  **deps:** Update npm non-major develop dependencies (#66) ([da2a212](https://github.com/aa900031/nitro-better-auth/commit/da2a21253b0f5b8ed6bcb950e7351e86947bb692))
+-  **deps:** Update npm non-major develop dependencies (#69) ([1c73c57](https://github.com/aa900031/nitro-better-auth/commit/1c73c578304a3e8f8d74555ca042d1233cbbd632))
+-  **deps:** Update pnpm to v11.28.12 (#70) ([9c31ee2](https://github.com/aa900031/nitro-better-auth/commit/9c31ee2dea1d37a4d6897930586eb915bd73f221))
+
+
+
+#### ❤️ Contributors
+
+- Renovate[bot] 
+- Zhong666 <aa900031@gmail.com>
+
 ## v0.4.0
 
 [compare changes](https://github.com/aa900031/nitro-better-auth/compare/v0.3.1...v0.4.0)
