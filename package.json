@@ -87,8 +87,8 @@
 		"@aa900031/release-it-config": "^1.0.0",
 		"@tsconfig/node24": "^24.0.6",
 		"@types/node": "^26.6.6",
-		"@vitest/coverage-istanbul": "^5.1.0",
-		"better-auth": "^1.7.23",
+		"@vitest/coverage-istanbul": "^5.1.1",
+		"better-auth": "^1.7.26",
 		"chokidar": "^5.0.0",
 		"defu": "^6.1.7",
 		"eslint": "^10.15.0",
@@ -102,7 +102,7 @@
 		"typescript": "~5.9.3",
 		"ufo": "^1.6.4",
 		"vite": "^8.3.8",
-		"vitest": "^5.1.0",
+		"vitest": "^5.1.1",
 		"wait-on": "^9.5.1"
 	}
 }
